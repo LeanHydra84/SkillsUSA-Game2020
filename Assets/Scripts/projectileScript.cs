@@ -9,8 +9,10 @@ public class projectileScript : MonoBehaviour
     public int bounceCount = 0;
     public bool isShrap;
     public bool pickupAble;
+    public bool dynamic = false;
     private SpriteRenderer itsAbigBattle;
     private Sprite startingTexture;
+    private Light glow;
     Camera mc;
 
     public Sprite StartingTexture
@@ -28,9 +30,11 @@ public class projectileScript : MonoBehaviour
     IEnumerator fadeOut()
     {
         GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        GetComponent<Collider>().enabled = false;
         float opacity = 1;
         while (opacity > 0)
         {
+            glow.intensity = opacity;
             itsAbigBattle.color = new Color(1, 1, 1, opacity);
             opacity -= 0.05f;
             yield return new WaitForSeconds(0.01f);
@@ -39,11 +43,20 @@ public class projectileScript : MonoBehaviour
         Destroy(gameObject);
     }
 
+    IEnumerator ShowAfterTime(float time)
+    {
+        itsAbigBattle.enabled = false;
+        yield return new WaitForSeconds(time);
+        itsAbigBattle.enabled = true;
+    }
 
     private void Start()
     {
         mc = Camera.main;
         beginTime = Time.time;
+        glow = transform.GetChild(1).GetComponent<Light>();
+        if (dynamic)
+            StartCoroutine(ShowAfterTime(0.01f));
     }
 
     private void Update()
@@ -56,21 +69,32 @@ public class projectileScript : MonoBehaviour
 
     }
 
+    private bool isWall(Collision col)
+    {
+        return (col.gameObject.tag != "boss" && col.gameObject.tag != "Player") ? true : false;
+    }
+
     private void OnCollisionEnter(Collision col)
     {
+        if (dynamic && isWall(col) && beginTime - Time.time < 0.01f) Destroy(gameObject);
+
         if (col.collider.gameObject.tag == "Player")
         {
             PlayerState.Health -= damage;
             Destroy(gameObject);
         }
 
-        if (col.gameObject.tag != "boss" && col.gameObject.tag != "Player" && isShrap)
+        if (isWall(col) && isShrap)
         {
-            bossFight.RingAttack(transform, 2, transform.rotation);
+            //MOVE AWAY FROM WALL
+            transform.position += col.contacts[0].normal / 4;
+            bossFight.RingAttack(transform, 2, transform.rotation, true);
+            Destroy(gameObject);
         }
 
         if (bounceCount == 0 && Time.time - beginTime > 0.1f)
             StartCoroutine(fadeOut());
+
         else if (bounceCount > 0)
         {
             StartingTexture = bossFight.spriteNames["Bounce" + bounceCount];

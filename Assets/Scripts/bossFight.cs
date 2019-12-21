@@ -14,6 +14,42 @@ Attacks List:
     '@': IMPORTANTE, similar to single shot, but can be picked up and used for ammo        
 */
 
+public class Bullet
+{
+    private int damage;
+    private bool shrap;
+    private bool pickup;
+    private int bounce;
+    private bool dynamic;
+    private Sprite initSprite;
+
+    public Bullet()
+    {
+        damage = 1;
+        shrap = false;
+        pickup = false;
+        bounce = 0;
+        dynamic = false;
+    }
+
+    public bool Shrap { get => shrap; set => shrap = value; }
+    public int Damage { get => damage; set => damage = value; }
+    public bool Pickup { get => pickup; set => pickup = value; }
+    public int Bounce { get => bounce; set => bounce = value; }
+    public bool Dynamic { get => dynamic; set => dynamic = value; }
+    public Sprite InitSprite { get => initSprite; set => initSprite = value; }
+
+    public void push(projectileScript c)
+    {
+        c.damage = damage;
+        c.isShrap = shrap;
+        c.pickupAble = pickup;
+        c.bounceCount = bounce;
+        c.dynamic = dynamic;
+        c.StartingTexture = initSprite;
+    }
+}
+
 public class bossFight : MonoBehaviour
 {
     public float BPM;
@@ -46,7 +82,7 @@ public class bossFight : MonoBehaviour
     void Start()
     {
         projectile = projE;
-        var patt = Resources.Load<TextAsset>(@"Songs/FileOut");
+        var patt = Resources.Load<TextAsset>(@"Songs/test");
         isPlaying = true;
         lines = Regex.Split(patt.text, "\r\n ?|\n");
         foreach (string a in lines) Debug.Log(a);
@@ -79,51 +115,74 @@ public class bossFight : MonoBehaviour
         return ang;
     }
 
-    public static void RingAttack(Transform t, int seperator, Quaternion startingRot)
+    public static void RingAttack(Transform t, int seperator, Quaternion startingRot, bool dynamic)
     {
         Quaternion adjustedRot;
         for (int i = 0; i < anglesX.Length; i += seperator)
         {
+            //Physical Location/Rotation
             Rigidbody shotProj = Instantiate(projectile, t.position, startingRot);
             adjustedRot = startingRot * Quaternion.Euler(Vector3.up * anglesX[i]);
             shotProj.transform.rotation = adjustedRot;
+            
+            //Scripting/Properties
             projectileScript ps = shotProj.GetComponent<projectileScript>();
-            ps.damage = 1;
-            if (seperator == 1) ps.StartingTexture = spriteNames["RedDouble"];
-            else ps.StartingTexture = spriteNames["GreenSingle"];
+            Bullet bul = new Bullet { Dynamic = dynamic };
+            
+
+            //Sprite
+            if (seperator == 1) bul.InitSprite = spriteNames["RedDouble"];
+            else bul.InitSprite = spriteNames["GreenSingle"];
+
+            bul.push(ps);
             shotProj.AddForce(shotProj.transform.forward * fire_speed, ForceMode.Impulse);
         }
     }
 
     void SingleAttack(Transform t, bool shrap, bool pickup, int bc)
     {
+        //Physical Location/Rotation
         Rigidbody proj = Instantiate(projectile, t.position, t.rotation);
-        projectileScript ps = proj.GetComponent<projectileScript>();
         proj.transform.rotation = smoothedRot;
-        ps.damage = 1;
-        ps.isShrap = shrap;
-        ps.bounceCount = bc;
-        ps.pickupAble = pickup;
-        if (shrap) ps.StartingTexture = spriteNames["GreenQuad"];
-        else if (bc > 0) ps.StartingTexture = spriteNames["Bounce" + (bc + 1)];
-        else ps.StartingTexture = spriteNames["BlueSingle"];
+
+        //Scripting/Properties
+        projectileScript ps = proj.GetComponent<projectileScript>();
+        Bullet bul = new Bullet
+        {
+            Shrap = shrap,
+            Bounce = bc,
+            Pickup = pickup
+        };
+
+        //Sprite
+        if (shrap) bul.InitSprite = spriteNames["GreenQuad"];
+        else if (bc > 0) bul.InitSprite = spriteNames["Bounce" + (bc + 1)];
+        else bul.InitSprite = spriteNames["BlueSingle"];
+        
+
+        bul.push(ps);
         proj.AddForce(transform.forward * fire_speed, ForceMode.Impulse);
     }
 
     void ShotgunAttack()
     {
         Quaternion adjustedRot;
+        Bullet bul = new Bullet { Damage = 1 };
         for (int i = 0; i < 3; i++)
         {
+            //Physical Location/Rotation
             Rigidbody shotProj = Instantiate(projectile, firePoint.position, transform.rotation);
             adjustedRot = smoothedRot * Quaternion.Euler(Vector3.up * SG_angles[i]);
             shotProj.transform.rotation = adjustedRot;
+
+            //Scripting/Properties
             projectileScript ps = shotProj.GetComponent<projectileScript>();
-            ps.damage = 1;
-            ps.StartingTexture = spriteNames["GreenSingle"];
+
+            //Sprite
+            bul.InitSprite = spriteNames["GreenSingle"];
+
+            bul.push(ps);
             shotProj.AddForce(shotProj.transform.forward * fire_speed, ForceMode.Impulse);
-
-
         }
     }
 
@@ -154,7 +213,7 @@ public class bossFight : MonoBehaviour
                             ShotgunAttack();
                             break;
                         case "/":
-                            RingAttack(transform, 1, smoothedRot);
+                            RingAttack(firePoint, 1, smoothedRot, false);
                             break;
                         case "$":
                             SingleAttack(firePoint, true, false, 0);
