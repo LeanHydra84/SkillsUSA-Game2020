@@ -21,6 +21,8 @@ public static class PlayerState
 	static float time;
     static int seconds;
     static bool canLose;
+    static int ammo;
+    
 
     public static float[] position;
     public static float x;
@@ -35,11 +37,21 @@ public static class PlayerState
         time = 0f;
 		seconds = 0;
         canLose = true;
+        ammo = 0;
+        IsInBossFight = true; //SHOULD NOT BE TRUE
     }
+
+    public static int Ammo
+    {
+        get => ammo;
+        set { if (value < 8) ammo = value; }
+    }
+
+    public static bool IsInBossFight { get; set; }
 
     public static int Health
     {
-        get { return health; }
+        get => health;
         set
         {
             if (canLose && (value >= 0 && value < 5))
@@ -52,13 +64,13 @@ public static class PlayerState
 
     public static int Keys
     {
-        get { return keys; }
+        get => keys;
         set { if (value > keys || value == 0) keys = value; }
     }
 
     public static float Time
     {
-        get { return time; }
+        get => time;
         set 
 		{
             seconds = (int)time;
@@ -66,7 +78,7 @@ public static class PlayerState
 		}
     }
     
-	public static int Seconds { get { return seconds; } }
+	public static int Seconds { get => seconds; }
 	
     public static void Load()
     {
@@ -117,15 +129,18 @@ public class mainScript : MonoBehaviour
     public float timeScale;
     public Text time;
     public bool showSeconds;
+    private RaycastHit flashHit;
 
     //Mask
     public bool maskOn;
     private bool CR_mask;
-
+    int lmask;
     public float intensityMult = 2f;
 
     //GUI
-    public Texture2D heart;
+    public Texture2D[] heart;
+    public Texture2D[] ammo_counter;
+
     //Array of lights for the mask
     public Light[] lightArray;
     public static mainScript instance;
@@ -139,7 +154,7 @@ public class mainScript : MonoBehaviour
             transform.position = new Vector3(PlayerState.x, PlayerState.y + 1, PlayerState.z);
 		}		
     }
-
+    
     void Start()
     {
         Debug.Log(Screen.width + " x " + Screen.height);
@@ -147,7 +162,11 @@ public class mainScript : MonoBehaviour
         lightArray = new Light[gos.Length];
         for (int i = 0; i < gos.Length; i++) lightArray[i] = gos[i].GetComponent<Light>();
         flashlight = GameObject.FindWithTag("flashlight").GetComponent<Light>();
-
+        lmask = ~((
+            1 << LayerMask.NameToLayer("triggers")) | 
+            1 << LayerMask.NameToLayer("Player") | 
+            1 << LayerMask.NameToLayer("bullet")
+        );
         maskOn = false;
         CR_mask = true;
     }
@@ -177,24 +196,23 @@ public class mainScript : MonoBehaviour
 
     void OnGUI()
     {
-        for (int i = 0; i < PlayerState.Health; i++) //Cycles once for every point of health
-        {
-            //Creates rect positions at a const height (7/8ths of the screen height) and exactly 10 pixels apart -- (numbers will be changed)
-            Rect imagePos = new Rect(32 * ((float)i + 0.8f), 25, 21, 21);
-            GUI.DrawTexture(imagePos, heart, ScaleMode.StretchToFill, true, 10.0f); //Images will scale to the rect size: hahahaha
-        }
+        //Draw Health
+        Rect heartPos = new Rect(0, 0, 210, 210);
+        GUI.DrawTexture(heartPos, heart[PlayerState.Health], ScaleMode.ScaleToFit, true);
+
+        //Draw Ammo
+        Rect ammoPos = new Rect(15, Screen.height - 240, 220, 220);
+        GUI.DrawTexture(ammoPos, ammo_counter[PlayerState.Ammo], ScaleMode.ScaleToFit, true);
 
         //Flashlight
-
         Event current = Event.current;
         Vector2 mousePos = new Vector2();
 
         mousePos.x = current.mousePosition.x;
         mousePos.y = charCont.mainCam.pixelHeight - current.mousePosition.y;
-        int lmask = ~(1 << LayerMask.NameToLayer("triggers"));
-        RaycastHit hit;
+
         Ray ray = charCont.mainCam.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, charCont.mainCam.nearClipPlane));
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, lmask)) flashlight.transform.LookAt(hit.point);
+        if (Physics.Raycast(ray, out flashHit, Mathf.Infinity, lmask)) flashlight.transform.LookAt(flashHit.point);
 
         //flashlight.transform.eulerAngles = new Vector3(Mathf.Clamp(flashlight.transform.eulerAngles.x, -20f, 15f), flashlight.transform.eulerAngles.y, 0f);
         // ^ Clamps vertical rotation between two constants. Issue: Currently locks to one constant, doesn't go negative
@@ -245,11 +263,31 @@ public class mainScript : MonoBehaviour
 
         }
 
-        //Flashlight toggle
-        if (Input.GetKeyDown(KeyCode.F))
+        //Note firing / Flashlight toggle
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            flashlight.enabled = !flashlight.enabled;
-            flashlight.gameObject.GetComponent<AudioSource>().Play();
+            if(PlayerState.IsInBossFight)
+            {
+                if(PlayerState.Ammo > 0)
+                {
+                    Rigidbody a = Instantiate(bossFight.projectile, transform.position, Quaternion.LookRotation(flashHit.point - transform.position));
+
+                    a.gameObject.layer = LayerMask.NameToLayer("returnFire");
+                    Bullet bul = new Bullet
+                    {
+                        ReturnFire = true,
+                        InitSprite = bossFight.spriteNames["BlueSingle"],
+                    };
+                    bul.push(a.GetComponent<projectileScript>());
+                    a.AddForce(a.transform.forward * bossFight.fire_speed, ForceMode.Impulse);
+                    PlayerState.Ammo--;
+                }
+            }
+            else
+            {
+                flashlight.enabled = !flashlight.enabled;
+                flashlight.gameObject.GetComponent<AudioSource>().Play();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.M) && CR_mask)

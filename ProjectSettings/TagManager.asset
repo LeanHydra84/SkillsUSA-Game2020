@@ -19,9 +19,9 @@ TagManager:
   - 
   - triggers
   - bullet
-  - 
-  - 
-  - 
+  - returnFire
+  - Player
+  - boss
   - 
   - 
   - 

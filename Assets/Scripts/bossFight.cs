@@ -22,6 +22,7 @@ public class Bullet
     private int bounce;
     private bool dynamic;
     private Sprite initSprite;
+    private bool returnFire;
 
     public Bullet()
     {
@@ -30,6 +31,7 @@ public class Bullet
         pickup = false;
         bounce = 0;
         dynamic = false;
+        returnFire = false;
     }
 
     public bool Shrap { get => shrap; set => shrap = value; }
@@ -38,6 +40,7 @@ public class Bullet
     public int Bounce { get => bounce; set => bounce = value; }
     public bool Dynamic { get => dynamic; set => dynamic = value; }
     public Sprite InitSprite { get => initSprite; set => initSprite = value; }
+    public bool ReturnFire { get => returnFire; set => returnFire = value; }
 
     public void push(projectileScript c)
     {
@@ -47,25 +50,43 @@ public class Bullet
         c.bounceCount = bounce;
         c.dynamic = dynamic;
         c.StartingTexture = initSprite;
+        c.returnFire = returnFire;
     }
 }
 
 public class bossFight : MonoBehaviour
 {
+    private int bossHealth;
+    
     public float BPM;
     private bool isPlaying;
+    private AudioSource music_player;
+
     private Transform player;
     private float smoothness = 10;
     private Vector3 targetPos;
     private Quaternion smoothedRot;
+
     public Rigidbody projE;
     public static Rigidbody projectile;
     public Transform firePoint;
+
     string[] lines;
     public static int[] anglesX;
     private readonly int[] SG_angles = { 0, 15, -15 };
 
     public static Dictionary<string, Sprite> spriteNames = new Dictionary<string, Sprite>();
+
+    public int BossHealth
+    {
+        get => bossHealth;
+        set
+        {
+            bossHealth = value;
+            if (bossHealth == 0) Death();
+        }
+    }
+
 
     void Awake()
     {
@@ -77,12 +98,13 @@ public class bossFight : MonoBehaviour
         }
     }
 
-    static int fire_speed;
+    public static int fire_speed;
 
     void Start()
     {
+        music_player = GetComponent<AudioSource>();
         projectile = projE;
-        var patt = Resources.Load<TextAsset>(@"Songs/test");
+        var patt = Resources.Load<TextAsset>(@"Songs/FileOut");
         isPlaying = true;
         lines = Regex.Split(patt.text, "\r\n ?|\n");
         foreach (string a in lines) Debug.Log(a);
@@ -90,6 +112,7 @@ public class bossFight : MonoBehaviour
         StartCoroutine(IterateFile());
         anglesX = GetAngles();
         fire_speed = 15;
+        bossHealth = 8;
     }
 
     Texture2D pf(string s)
@@ -114,6 +137,7 @@ public class bossFight : MonoBehaviour
 
         return ang;
     }
+
 
     public static void RingAttack(Transform t, int seperator, Quaternion startingRot, bool dynamic)
     {
@@ -155,9 +179,10 @@ public class bossFight : MonoBehaviour
         };
 
         //Sprite
-        if (shrap) bul.InitSprite = spriteNames["GreenQuad"];
+        if(pickup) bul.InitSprite = spriteNames["BlueSingle"];
+        else if (shrap) bul.InitSprite = spriteNames["GreenQuad"];
         else if (bc > 0) bul.InitSprite = spriteNames["Bounce" + (bc + 1)];
-        else bul.InitSprite = spriteNames["BlueSingle"];
+        else bul.InitSprite = spriteNames["Bounce1"];
         
 
         bul.push(ps);
@@ -186,6 +211,27 @@ public class bossFight : MonoBehaviour
         }
     }
 
+    void Death()
+    {
+        Debug.Log("Death method called");
+        isPlaying = false;
+        StartCoroutine(deathFade());
+    }
+
+    IEnumerator deathFade()
+    {
+        SpriteRenderer spr = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        float opacity = 1f;
+        while (opacity > 0)
+        {
+            spr.color = new Color(opacity, opacity, opacity, opacity);
+            opacity -= 0.05f;
+            yield return new WaitForSeconds(0.1f);
+        }
+        System.GC.Collect();
+        Destroy(gameObject);
+    }
+
     IEnumerator IterateFile()
     {
         BPM = float.Parse(lines[0]);
@@ -193,8 +239,10 @@ public class bossFight : MonoBehaviour
         Debug.Log("BPM: " + BPM);
         while (isPlaying)
         {
+            music_player.Play();
             for (int i = 1; i < lines.Length; i++)
             {
+                if (!isPlaying) yield break;
                 if (float.TryParse(lines[i], out float waitBeats))
                 {
                     waitBeats *= multiplier;
@@ -227,7 +275,6 @@ public class bossFight : MonoBehaviour
                         default:
                             Debug.Log($"Error at line {i}: Illegal input {lines[i]}.");
                             break;
-                            //throw new System.Exception($"Error at line {i}: Illegal input {lines[i]}.");
                     }
                     yield return 0;
                 }

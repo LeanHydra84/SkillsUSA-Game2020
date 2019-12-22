@@ -10,6 +10,7 @@ public class projectileScript : MonoBehaviour
     public bool isShrap;
     public bool pickupAble;
     public bool dynamic = false;
+    public bool returnFire = false;
     private SpriteRenderer itsAbigBattle;
     private Sprite startingTexture;
     private Light glow;
@@ -17,7 +18,7 @@ public class projectileScript : MonoBehaviour
 
     public Sprite StartingTexture
     {
-        get { return startingTexture; }
+        get => startingTexture;
         set
         {
             if (itsAbigBattle == null) itsAbigBattle = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -67,6 +68,16 @@ public class projectileScript : MonoBehaviour
             StartCoroutine(fadeOut());
         }
 
+        if(pickupAble && Input.GetKeyDown(KeyCode.E))
+        {
+            if (Vector3.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) < 5)
+            {
+                PlayerState.Ammo++;
+                Destroy(gameObject);
+            }
+        }
+
+
     }
 
     private bool isWall(Collision col)
@@ -77,6 +88,12 @@ public class projectileScript : MonoBehaviour
     private void OnCollisionEnter(Collision col)
     {
         if (dynamic && isWall(col) && beginTime - Time.time < 0.01f) Destroy(gameObject);
+
+        if(returnFire && col.gameObject.tag == "boss")
+        {
+            col.gameObject.GetComponent<bossFight>().BossHealth--;
+            StartCoroutine(fadeOut());
+        }
 
         if (col.collider.gameObject.tag == "Player")
         {
