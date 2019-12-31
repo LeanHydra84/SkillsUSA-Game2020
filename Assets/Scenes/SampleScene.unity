@@ -386,16 +386,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Capsule (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 8067089829281974287, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 8067089829281974287, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
     - target: {fileID: 8067089829281974326, guid: 80f4a8bed8f78a1458a9dec5c1397072,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -450,86 +440,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: heart.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: ammo_counter.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: heart.Array.data[0]
-      value: 
-      objectReference: {fileID: 2800000, guid: d9b404b136c666147aa78316f87cf3d6, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: heart.Array.data[1]
-      value: 
-      objectReference: {fileID: 2800000, guid: ae49b01a506932443a68c457ff2d331e, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: heart.Array.data[2]
-      value: 
-      objectReference: {fileID: 2800000, guid: f0cd8f2365334774d8d6f59e12b7f6e9, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: heart.Array.data[3]
-      value: 
-      objectReference: {fileID: 2800000, guid: cf5a773ca1aa13344b1b70f9be294f65, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: heart.Array.data[4]
-      value: 
-      objectReference: {fileID: 2800000, guid: c118ac46be04dd1448d41cfda328f6a4, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: ammo_counter.Array.data[0]
-      value: 
-      objectReference: {fileID: 2800000, guid: afc74a8e85b6fee49b57ab360f24b2aa, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: ammo_counter.Array.data[1]
-      value: 
-      objectReference: {fileID: 2800000, guid: a919e29a7fed4154eaeac0f725ed0646, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: ammo_counter.Array.data[2]
-      value: 
-      objectReference: {fileID: 2800000, guid: 04db89cdc000299429cbcd6e767fa2d4, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: ammo_counter.Array.data[3]
-      value: 
-      objectReference: {fileID: 2800000, guid: 6697d64b71c130d408ee41d12479fdf4, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: ammo_counter.Array.data[4]
-      value: 
-      objectReference: {fileID: 2800000, guid: fb9b912e187ca91489483e398412708f, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: ammo_counter.Array.data[5]
-      value: 
-      objectReference: {fileID: 2800000, guid: 20e8199c0d4bd0a4782be0aef4b4fb78, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: ammo_counter.Array.data[6]
-      value: 
-      objectReference: {fileID: 2800000, guid: aa8bb55fb102f214db53828ba86f9c90, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: ammo_counter.Array.data[7]
-      value: 
-      objectReference: {fileID: 2800000, guid: a1e3a3f169eeb8e4e9885a7c52a07152, type: 3}
-    - target: {fileID: 8067089829259973464, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: m_Layer
-      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80f4a8bed8f78a1458a9dec5c1397072, type: 3}

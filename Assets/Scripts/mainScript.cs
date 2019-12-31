@@ -18,11 +18,11 @@ public static class PlayerState
 
     static int keys;
     static int health;
-	static float time;
+    static float time;
     static int seconds;
     static bool canLose;
     static int ammo;
-    
+
 
     public static float[] position;
     public static float x;
@@ -35,10 +35,10 @@ public static class PlayerState
         keys = 0;
         health = 4;
         time = 0f;
-		seconds = 0;
+        seconds = 0;
         canLose = true;
         ammo = 0;
-        IsInBossFight = true; //SHOULD NOT BE TRUE
+        IsInBossFight = false; //SHOULD NOT BE TRUE
     }
 
     public static int Ammo
@@ -71,15 +71,15 @@ public static class PlayerState
     public static float Time
     {
         get => time;
-        set 
-		{
+        set
+        {
             seconds = (int)time;
             if (value > time) time = value;
-		}
+        }
     }
-    
-	public static int Seconds { get => seconds; }
-	
+
+    public static int Seconds { get => seconds; }
+
     public static void Load()
     {
         BinaryFormatter formatter = new BinaryFormatter();
@@ -89,18 +89,18 @@ public static class PlayerState
         transDat trans = (transDat)saveObj;
 
         health = trans.health;
-		keys = trans.keys;
-		time = trans.time;
-		seconds = (int)time;
+        keys = trans.keys;
+        time = trans.time;
+        seconds = (int)time;
 
         for (int i = 0; i < 3; i++)
         {
             position[i] = trans.HoldPosition[i];
         }
     }
-	
-	public static void Save()
-	{
+
+    public static void Save()
+    {
         transDat trans = new transDat
         {
             keys = keys,
@@ -116,8 +116,8 @@ public static class PlayerState
         BinaryFormatter formatter = new BinaryFormatter();
         Stream stream = new FileStream(Application.persistentDataPath + "//save.txt", FileMode.Create, FileAccess.Write);
         formatter.Serialize(stream, trans);
-		stream.Close();
-	}
+        stream.Close();
+    }
 
 }
 
@@ -140,35 +140,47 @@ public class mainScript : MonoBehaviour
     //GUI
     public Texture2D[] heart;
     public Texture2D[] ammo_counter;
-
+    public Texture2D timeImage;
+    private bool canPause;
+    public int goo;
+    
     //Array of lights for the mask
     public Light[] lightArray;
     public static mainScript instance;
-	
+
+    Dictionary<string, Rect> rectPositions = new Dictionary<string, Rect>();
+
     private void Awake()
     {
         instance = this;
-		if(!menu.newGame) 
-		{
-			PlayerState.Load();
+        if (!menu.newGame)
+        {
+            PlayerState.Load();
             transform.position = new Vector3(PlayerState.x, PlayerState.y + 1, PlayerState.z);
-		}		
+        }
     }
-    
+
     void Start()
     {
+        
         Debug.Log(Screen.width + " x " + Screen.height);
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
         lightArray = new Light[gos.Length];
         for (int i = 0; i < gos.Length; i++) lightArray[i] = gos[i].GetComponent<Light>();
         flashlight = GameObject.FindWithTag("flashlight").GetComponent<Light>();
         lmask = ~((
-            1 << LayerMask.NameToLayer("triggers")) | 
-            1 << LayerMask.NameToLayer("Player") | 
+            1 << LayerMask.NameToLayer("triggers")) |
+            1 << LayerMask.NameToLayer("Player") |
             1 << LayerMask.NameToLayer("bullet")
         );
         maskOn = false;
         CR_mask = true;
+        
+        //Dictionary Rects:
+        rectPositions.Add("Heart", new Rect(0, 0, Screen.width / 9.16f, Screen.width / 9.16f));
+        rectPositions.Add("Ammo", new Rect(Screen.width / 128.26f, Screen.height - (Screen.height / 3.79f), Screen.width / 8.75f, Screen.width / 8.75f));
+        rectPositions.Add("Time", new Rect(Screen.width - (Screen.width / 6.41f), -(Screen.height / 18.22f), Screen.width / 6.41f, Screen.height / 3.04f));
+        rectPositions.Add("TimeText", new Rect(Screen.width / 1.08f, Screen.height / 10.65f, Screen.width / 3.9f, Screen.height / 5.37f));
     }
 
 
@@ -197,13 +209,17 @@ public class mainScript : MonoBehaviour
     void OnGUI()
     {
         //Draw Health
-        Rect heartPos = new Rect(0, 0, 210, 210);
-        GUI.DrawTexture(heartPos, heart[PlayerState.Health], ScaleMode.ScaleToFit, true);
+        GUI.DrawTexture(rectPositions["Heart"], heart[PlayerState.Health], ScaleMode.ScaleToFit, true);
 
         //Draw Ammo
-        Rect ammoPos = new Rect(15, Screen.height - 240, 220, 220);
-        GUI.DrawTexture(ammoPos, ammo_counter[PlayerState.Ammo], ScaleMode.ScaleToFit, true);
+        GUI.DrawTexture(rectPositions["Ammo"], ammo_counter[PlayerState.Ammo], ScaleMode.ScaleToFit, true);
 
+        //Draw Time
+        GUI.DrawTexture(rectPositions["Time"], timeImage, ScaleMode.ScaleToFit, true);
+        GUIStyle style = new GUIStyle();
+        style.normal.textColor = Color.black;
+        style.fontSize = goo;
+        GUI.Label(rectPositions["TimeText"], convertTime(PlayerState.Seconds), style);
         //Flashlight
         Event current = Event.current;
         Vector2 mousePos = new Vector2();
@@ -216,6 +232,15 @@ public class mainScript : MonoBehaviour
 
         //flashlight.transform.eulerAngles = new Vector3(Mathf.Clamp(flashlight.transform.eulerAngles.x, -20f, 15f), flashlight.transform.eulerAngles.y, 0f);
         // ^ Clamps vertical rotation between two constants. Issue: Currently locks to one constant, doesn't go negative
+
+
+
+        //MAIN MENU
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+
+        }
+
     }
 
     string convertTime(int seconds)
@@ -253,8 +278,8 @@ public class mainScript : MonoBehaviour
 
     void Update()
     {
-    	PlayerState.Time = PlayerState.Time + Time.deltaTime;
-        if(time != null) time.text = convertTime(PlayerState.Seconds);
+        PlayerState.Time = PlayerState.Time + Time.deltaTime;
+        //if (time != null) time.text = convertTime(PlayerState.Seconds);
 
         //Lose-Death condition
         if (PlayerState.Health <= 0)
@@ -266,9 +291,9 @@ public class mainScript : MonoBehaviour
         //Note firing / Flashlight toggle
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if(PlayerState.IsInBossFight)
+            if (PlayerState.IsInBossFight)
             {
-                if(PlayerState.Ammo > 0)
+                if (PlayerState.Ammo > 0)
                 {
                     Rigidbody a = Instantiate(bossFight.projectile, transform.position, Quaternion.LookRotation(flashHit.point - transform.position));
 
@@ -289,15 +314,16 @@ public class mainScript : MonoBehaviour
                 flashlight.gameObject.GetComponent<AudioSource>().Play();
             }
         }
-
+        
         if (Input.GetKeyDown(KeyCode.M) && CR_mask)
             StartCoroutine(mask(maskOn));
-
+        /*
         if (Input.GetKeyDown(KeyCode.Escape))
 		{
 			PlayerState.Save();
            		Application.Quit();
 		}
+        */
     }
 
 }

@@ -215,6 +215,7 @@ public class bossFight : MonoBehaviour
     {
         Debug.Log("Death method called");
         isPlaying = false;
+        music_player.Stop();
         StartCoroutine(deathFade());
     }
 
