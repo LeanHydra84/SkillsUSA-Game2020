@@ -8,4 +8,6 @@ public class roomClass : MonoBehaviour
     public string roomName = "";
     public Transform roomCam;
     public Vector4 md;
+
+    public GameObject[] assets;
 }

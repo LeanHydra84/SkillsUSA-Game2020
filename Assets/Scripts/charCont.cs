@@ -72,7 +72,8 @@ public class charCont : MonoBehaviour
 	    //Debug.Log(other.gameObject.name);
         if(other.tag == "triggerRoom" && other != c1) 
         {
-            if (Time.time > 1f && c1.GetComponent<roomClass>().isHallway)
+            
+            if (Time.time > 1f && c1.GetComponent<roomClass>().isHallway) //Emables camera after exiting hallway, sets position to exiting position
             {
                 EnableCamera(mainCam);
                 mainCam.transform.position = c1.GetComponent<roomClass>().roomCam.transform.position;
@@ -80,6 +81,7 @@ public class charCont : MonoBehaviour
             roomClass rc = other.gameObject.GetComponent<roomClass>();
             walkDirection = rc.md;
             StartCoroutine(lerpCamera(rc.roomCam.transform, rc.isHallway));
+            StartCoroutine(mainScript.EnableRoom(rc.assets));
             c1 = other;
         }
     }
@@ -111,6 +113,7 @@ public class charCont : MonoBehaviour
 
     IEnumerator lerpCamera(Transform t, bool isHall)
     {
+        
         float startTime = Time.time;
         float journeyDistance = Vector3.Distance(t.position, transform.position);
         float speed = .1f;

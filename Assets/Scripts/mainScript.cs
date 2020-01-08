@@ -38,7 +38,7 @@ public static class PlayerState
         seconds = 0;
         canLose = true;
         ammo = 0;
-        IsInBossFight = false; //SHOULD NOT BE TRUE
+        IsInBossFight = true; //SHOULD NOT BE TRUE
     }
 
     public static int Ammo
@@ -143,15 +143,29 @@ public class mainScript : MonoBehaviour
     public Texture2D timeImage;
     private bool canPause;
     public int goo;
-    
+
     //Array of lights for the mask
     public Light[] lightArray;
     public static mainScript instance;
-
+    private static List<GameObject> AllRooms;
     Dictionary<string, Rect> rectPositions = new Dictionary<string, Rect>();
+
+    private void GetAllMapObjects()
+    {
+        GameObject map_parent = GameObject.Find("Map.Furniture.V4");
+        AllRooms = new List<GameObject>();
+        for (int i = 0; i < map_parent.transform.childCount; i++)
+        {
+            AllRooms.Add(map_parent.transform.GetChild(i).gameObject);
+        }
+
+    }
 
     private void Awake()
     {
+        if (AllRooms == null)
+            GetAllMapObjects();
+
         instance = this;
         if (!menu.newGame)
         {
@@ -162,7 +176,7 @@ public class mainScript : MonoBehaviour
 
     void Start()
     {
-        
+
         Debug.Log(Screen.width + " x " + Screen.height);
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
         lightArray = new Light[gos.Length];
@@ -175,7 +189,7 @@ public class mainScript : MonoBehaviour
         );
         maskOn = false;
         CR_mask = true;
-        
+
         //Dictionary Rects:
         rectPositions.Add("Heart", new Rect(0, 0, Screen.width / 9.16f, Screen.width / 9.16f));
         rectPositions.Add("Ammo", new Rect(Screen.width / 128.26f, Screen.height - (Screen.height / 3.79f), Screen.width / 8.75f, Screen.width / 8.75f));
@@ -183,6 +197,47 @@ public class mainScript : MonoBehaviour
         rectPositions.Add("TimeText", new Rect(Screen.width / 1.08f, Screen.height / 10.65f, Screen.width / 3.9f, Screen.height / 5.37f));
     }
 
+    public static IEnumerator EnableRoom(GameObject[] correct)
+    {
+        List<GameObject> RemoveList = AllRooms;
+        foreach (GameObject item in correct)
+            RemoveList.Remove(item);
+
+
+        foreach (GameObject y in correct)
+            y.SetActive(true);
+
+        foreach (GameObject z in RemoveList)
+        {
+            Renderer l = z.GetComponent<Renderer>();
+            foreach(Material mat in l.materials)
+            {
+                Debug.Log(mat.name);
+                mat.SetColor("_Color", Color.black);
+            }
+        }
+        yield return 0;
+        /*
+        float alphaChannel = 1.0f;
+        while(alphaChannel > 0)
+        {
+            foreach (GameObject go in RemoveList)
+            {
+                Renderer threeLoops = go.GetComponent<Renderer>();
+                foreach(Material mat in threeLoops.materials)
+                {
+                    Color col = mat.color;
+                    col.a = alphaChannel;
+                    mat.color = col;
+                }
+            }
+            alphaChannel -= 0.1f;
+            Debug.Log(alphaChannel);
+            yield return new WaitForSeconds(0.01f);
+
+        }
+        */
+    }
 
     IEnumerator mask(bool a)
     {
@@ -314,7 +369,7 @@ public class mainScript : MonoBehaviour
                 flashlight.gameObject.GetComponent<AudioSource>().Play();
             }
         }
-        
+
         if (Input.GetKeyDown(KeyCode.M) && CR_mask)
             StartCoroutine(mask(maskOn));
         /*

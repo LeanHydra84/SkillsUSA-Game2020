@@ -107,11 +107,11 @@ public class RandomRoom_Test : MonoBehaviour
 
         foreach (Zone z in zones)
         {
-
+            
             GameObject inst_obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
             inst_obj.transform.position = z.DeployPoint();
             inst_obj.transform.LookAt(middle);
-
+            
             /*
             //This code tests the positions of the exterior: it places all primary (spheres) and secondary (cubes) points as detailed in the graphic.
             GameObject a = GameObject.CreatePrimitive(PrimitiveType.Sphere);
