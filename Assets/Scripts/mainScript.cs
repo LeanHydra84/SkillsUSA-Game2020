@@ -148,6 +148,7 @@ public class mainScript : MonoBehaviour
     public Light[] lightArray;
     public static mainScript instance;
     private static List<GameObject> AllRooms;
+    public static Dictionary<Material, Color> defaultColors;
     Dictionary<string, Rect> rectPositions = new Dictionary<string, Rect>();
 
     private void GetAllMapObjects()
@@ -160,20 +161,50 @@ public class mainScript : MonoBehaviour
         }
 
     }
-
+	
+	private void GetMaterialColors()
+	{
+		foreach(GameObject x in AllRooms)
+		{
+			Renderer rend = x.GetComponent<Renderer>();
+			foreach(Material y in rend.materials) defaultColors.Add(y, y.color);
+		}
+	}
+	
     private void Awake()
     {
+		instance = this;
+	
         if (AllRooms == null)
             GetAllMapObjects();
-
-        instance = this;
+			
+		if (defaultColors == null)
+			GetMaterialColors();
+			
         if (!menu.newGame)
         {
             PlayerState.Load();
             transform.position = new Vector3(PlayerState.x, PlayerState.y + 1, PlayerState.z);
         }
     }
-
+	
+	public static Renderer[] GetAllMaterials(GameObject[] go)
+	{
+		MeshRenderer[] R = new MeshRenderer[go.Length];
+		List<Material> mats = new List<Material>();
+        for(int i = 0; i < go.Length; i++)
+			R[i] = go[i].GetComponent<MeshRenderer>();
+		
+		//Get all materials in list, return list.toarray()
+		
+		return R;
+	}
+	
+	public static Renderer[] GetAllRenderers(GameObject go)
+	{
+		
+	}
+	
     void Start()
     {
 
@@ -197,16 +228,20 @@ public class mainScript : MonoBehaviour
         rectPositions.Add("TimeText", new Rect(Screen.width / 1.08f, Screen.height / 10.65f, Screen.width / 3.9f, Screen.height / 5.37f));
     }
 
-    public static IEnumerator EnableRoom(GameObject[] correct)
+    public static IEnumerator EnableRoom(roomClass room)
     {
         List<GameObject> RemoveList = AllRooms;
-        foreach (GameObject item in correct)
+        foreach (GameObject item in room.assets)
             RemoveList.Remove(item);
-
-
-        foreach (GameObject y in correct)
-            y.SetActive(true);
-
+			
+		MeshRenderer[] Renders = room.GetRenderers();
+		
+		foreach(MeshRenderer z in Renders)
+		{
+			z.color = defaultColors[z];
+		}
+		
+		/*
         foreach (GameObject z in RemoveList)
         {
             Renderer l = z.GetComponent<Renderer>();
@@ -216,6 +251,8 @@ public class mainScript : MonoBehaviour
                 mat.SetColor("_Color", Color.black);
             }
         }
+		
+		*/
         yield return 0;
         /*
         float alphaChannel = 1.0f;
