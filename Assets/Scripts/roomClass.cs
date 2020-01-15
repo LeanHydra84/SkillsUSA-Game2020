@@ -21,5 +21,22 @@ public class roomClass : MonoBehaviour
 		return R;
 		
     }
+
+    public Material[] GetMaterials()
+    {
+        MeshRenderer[] g = GetRenderers();
+        List<Material> matList = new List<Material>();
+
+        foreach(MeshRenderer x in g)
+        {
+            foreach(Material y in x.materials)
+            {
+                matList.Add(y);
+            }
+        }
+
+        return matList.ToArray();
+
+    }
     
 }

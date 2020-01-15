@@ -121,6 +121,58 @@ public static class PlayerState
 
 }
 
+public class DialogPrompt : MonoBehaviour
+{
+
+    readonly string text;
+    readonly string displayName;
+
+    public static readonly Texture2D background;
+    float startTime;
+    float showTime;
+
+    static DialogPrompt()
+    {
+        background = new Texture2D(1, 1);
+        background.SetPixel(0, 0, Color.gray);
+        background.Apply();
+    }
+
+    public DialogPrompt(string n, string t)
+    {
+        displayName = n;
+        text = t;
+        showTime = 5f;
+
+    }
+
+    private void Start()
+    {
+        Debug.Log("Test Start");
+    }
+
+    public DialogPrompt(string n, string t, float d)
+    {
+        displayName = n;
+        text = t;
+        showTime = d;
+    }
+
+    public void Show()
+    {
+        startTime = Time.time;
+        Debug.Log("This code is running");
+    }
+
+    void OnGUI()
+    {
+        GUI.DrawTexture(new Rect(0, Screen.height, Screen.width, Screen.height / 5), background, ScaleMode.StretchToFill);
+        Debug.Log("Believe it");
+    }
+
+}
+
+
 public class mainScript : MonoBehaviour
 {
 
@@ -144,6 +196,7 @@ public class mainScript : MonoBehaviour
     private bool canPause;
     public int goo;
 
+    public DialogPrompt dp;
     //Array of lights for the mask
     public Light[] lightArray;
     public static mainScript instance;
@@ -164,6 +217,8 @@ public class mainScript : MonoBehaviour
 	
 	private void GetMaterialColors()
 	{
+        defaultColors = new Dictionary<Material, Color>();
+
 		foreach(GameObject x in AllRooms)
 		{
 			Renderer rend = x.GetComponent<Renderer>();
@@ -174,13 +229,11 @@ public class mainScript : MonoBehaviour
     private void Awake()
     {
 		instance = this;
-	
-        if (AllRooms == null)
-            GetAllMapObjects();
-			
-		if (defaultColors == null)
-			GetMaterialColors();
-			
+
+        //if (AllRooms == null)
+        //GetAllMapObjects();
+
+
         if (!menu.newGame)
         {
             PlayerState.Load();
@@ -188,26 +241,16 @@ public class mainScript : MonoBehaviour
         }
     }
 	
-	public static Renderer[] GetAllMaterials(GameObject[] go)
-	{
-		MeshRenderer[] R = new MeshRenderer[go.Length];
-		List<Material> mats = new List<Material>();
-        for(int i = 0; i < go.Length; i++)
-			R[i] = go[i].GetComponent<MeshRenderer>();
-		
-		//Get all materials in list, return list.toarray()
-		
-		return R;
-	}
-	
-	public static Renderer[] GetAllRenderers(GameObject go)
-	{
-		
-	}
-	
+
+
     void Start()
     {
+        //if (defaultColors == null)
+        //GetMaterialColors();
 
+        dp = new DialogPrompt("G", "J");
+        dp.Show();
+        //Debug.Log(defaultColors.Keys);
         Debug.Log(Screen.width + " x " + Screen.height);
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
         lightArray = new Light[gos.Length];
@@ -226,54 +269,29 @@ public class mainScript : MonoBehaviour
         rectPositions.Add("Ammo", new Rect(Screen.width / 128.26f, Screen.height - (Screen.height / 3.79f), Screen.width / 8.75f, Screen.width / 8.75f));
         rectPositions.Add("Time", new Rect(Screen.width - (Screen.width / 6.41f), -(Screen.height / 18.22f), Screen.width / 6.41f, Screen.height / 3.04f));
         rectPositions.Add("TimeText", new Rect(Screen.width / 1.08f, Screen.height / 10.65f, Screen.width / 3.9f, Screen.height / 5.37f));
+
     }
 
-    public static IEnumerator EnableRoom(roomClass room)
+    public static IEnumerator EnableRoom(GameObject[] correct)
     {
-        List<GameObject> RemoveList = AllRooms;
-        foreach (GameObject item in room.assets)
-            RemoveList.Remove(item);
-			
-		MeshRenderer[] Renders = room.GetRenderers();
-		
-		foreach(MeshRenderer z in Renders)
-		{
-			z.color = defaultColors[z];
-		}
-		
-		/*
-        foreach (GameObject z in RemoveList)
-        {
-            Renderer l = z.GetComponent<Renderer>();
-            foreach(Material mat in l.materials)
-            {
-                Debug.Log(mat.name);
-                mat.SetColor("_Color", Color.black);
-            }
-        }
-		
-		*/
-        yield return 0;
-        /*
-        float alphaChannel = 1.0f;
-        while(alphaChannel > 0)
-        {
-            foreach (GameObject go in RemoveList)
-            {
-                Renderer threeLoops = go.GetComponent<Renderer>();
-                foreach(Material mat in threeLoops.materials)
-                {
-                    Color col = mat.color;
-                    col.a = alphaChannel;
-                    mat.color = col;
-                }
-            }
-            alphaChannel -= 0.1f;
-            Debug.Log(alphaChannel);
-            yield return new WaitForSeconds(0.01f);
 
+        List<GameObject> RemoveList = AllRooms;
+
+        foreach (GameObject j in correct)
+        {
+            j.SetActive(true);
+            RemoveList.Remove(j);
         }
-        */
+            
+
+        yield return new WaitForSeconds(1.0f);
+
+        foreach (GameObject k in RemoveList)
+        {
+            k.SetActive(false);
+            Debug.Log(k);
+        }
+            
     }
 
     IEnumerator mask(bool a)
@@ -300,6 +318,7 @@ public class mainScript : MonoBehaviour
 
     void OnGUI()
     {
+
         //Draw Health
         GUI.DrawTexture(rectPositions["Heart"], heart[PlayerState.Health], ScaleMode.ScaleToFit, true);
 
