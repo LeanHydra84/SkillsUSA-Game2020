@@ -121,57 +121,6 @@ public static class PlayerState
 
 }
 
-public class DialogPrompt : MonoBehaviour
-{
-
-    readonly string text;
-    readonly string displayName;
-
-    public static readonly Texture2D background;
-    float startTime;
-    float showTime;
-
-    static DialogPrompt()
-    {
-        background = new Texture2D(1, 1);
-        background.SetPixel(0, 0, Color.gray);
-        background.Apply();
-    }
-
-    public DialogPrompt(string n, string t)
-    {
-        displayName = n;
-        text = t;
-        showTime = 5f;
-
-    }
-
-    private void Start()
-    {
-        Debug.Log("Test Start");
-    }
-
-    public DialogPrompt(string n, string t, float d)
-    {
-        displayName = n;
-        text = t;
-        showTime = d;
-    }
-
-    public void Show()
-    {
-        startTime = Time.time;
-        Debug.Log("This code is running");
-    }
-
-    void OnGUI()
-    {
-        GUI.DrawTexture(new Rect(0, Screen.height, Screen.width, Screen.height / 5), background, ScaleMode.StretchToFill);
-        Debug.Log("Believe it");
-    }
-
-}
-
 
 public class mainScript : MonoBehaviour
 {
@@ -182,7 +131,7 @@ public class mainScript : MonoBehaviour
     public Text time;
     public bool showSeconds;
     private RaycastHit flashHit;
-
+    public GUIStyle g;
     //Mask
     public bool maskOn;
     private bool CR_mask;
@@ -196,13 +145,13 @@ public class mainScript : MonoBehaviour
     private bool canPause;
     public int goo;
 
-    public DialogPrompt dp;
     //Array of lights for the mask
     public Light[] lightArray;
     public static mainScript instance;
     private static List<GameObject> AllRooms;
-    public static Dictionary<Material, Color> defaultColors;
+    //public static Dictionary<Material, Color> defaultColors;
     Dictionary<string, Rect> rectPositions = new Dictionary<string, Rect>();
+    DialogScript dg;
 
     private void GetAllMapObjects()
     {
@@ -214,7 +163,7 @@ public class mainScript : MonoBehaviour
         }
 
     }
-	
+	/*
 	private void GetMaterialColors()
 	{
         defaultColors = new Dictionary<Material, Color>();
@@ -225,7 +174,7 @@ public class mainScript : MonoBehaviour
 			foreach(Material y in rend.materials) defaultColors.Add(y, y.color);
 		}
 	}
-	
+	*/
     private void Awake()
     {
 		instance = this;
@@ -247,9 +196,9 @@ public class mainScript : MonoBehaviour
     {
         //if (defaultColors == null)
         //GetMaterialColors();
+        dg = gameObject.AddComponent<DialogScript>();
 
-        dp = new DialogPrompt("G", "J");
-        dp.Show();
+
         //Debug.Log(defaultColors.Keys);
         Debug.Log(Screen.width + " x " + Screen.height);
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
@@ -398,6 +347,8 @@ public class mainScript : MonoBehaviour
             //SceneManager.LoadScene("loseCondition"); //Very tenuous
 
         }
+
+        if(Input.GetKeyDown(KeyCode.K)) dg.Initialize("TestName", "ABCDwadwaduywaudhwaiudhwaiudhwaidhwuydghawidhwaidhwiudhwaud\n 1234\n FGHJ", false);
 
         //Note firing / Flashlight toggle
         if (Input.GetKeyDown(KeyCode.Mouse0))
