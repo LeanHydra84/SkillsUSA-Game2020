@@ -91,7 +91,7 @@ public class DialogScript : MonoBehaviour
             {
                 if (lines[lineReader].Length != characterReader)
                 {
-                    if (characterReader == 25) lineSoFar += "\n";
+                    if (characterReader % 40 == 0 && characterReader != 0) lineSoFar += "\n";
                     lineSoFar += lines[lineReader][characterReader];
                     characterReader++;
                 }
