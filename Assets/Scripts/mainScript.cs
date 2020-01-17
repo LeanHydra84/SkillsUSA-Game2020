@@ -348,7 +348,7 @@ public class mainScript : MonoBehaviour
 
         }
 
-        if(Input.GetKeyDown(KeyCode.K)) dg.Initialize("TestName", "ABCDwadwaduywaudhwaiudhwaiudhwaidhwuydghawidhwaidhwiudhwaud\n 1234\n FGHJ", false);
+        if(Input.GetKeyDown(KeyCode.K)) dg.Initialize("TestName", "I think we can put our differences behind us\nFor science.\nYou monster.", false);
 
         //Note firing / Flashlight toggle
         if (Input.GetKeyDown(KeyCode.Mouse0))

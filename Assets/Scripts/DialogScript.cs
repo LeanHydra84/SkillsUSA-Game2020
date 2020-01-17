@@ -70,8 +70,6 @@ public class DialogScript : MonoBehaviour
             CanRun++;
             sinceTime = Time.time;
         }
-        
-        Debug.Log(Time.deltaTime);
 
     }
 
