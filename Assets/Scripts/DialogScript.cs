@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 
 //Created by DialogScript dialog = AddComponent<DialogScript>().Initialize("name", "TEXT TEXT TEXT TEXT \n TEXT TEXT TEXT");
 
+delegate bool divCheck(float n);
+
 public class DialogScript : MonoBehaviour
 {
     public GUIStyle myStyle;
@@ -21,7 +23,7 @@ public class DialogScript : MonoBehaviour
     private float divSize;
     private float additionConstant;
 
-    public Texture2D background;
+    private Texture2D background;
     float startTime;
     float showTime;
 
@@ -32,6 +34,8 @@ public class DialogScript : MonoBehaviour
         background.SetPixel(0, 0, selectColor);
         background.Apply();
         myStyle = new GUIStyle();
+        myStyle.fontSize = 25;
+        myStyle.fontStyle = FontStyle.Bold;
         myStyle.alignment = (TextAnchor)TextAlignment.Center;
 
     }
@@ -57,18 +61,27 @@ public class DialogScript : MonoBehaviour
         }
     }
 
+    void ShowHideBanner(divCheck dc, int mult)
+    {
+        additionConstant = Mathf.Lerp(additionConstant, 0.006f, (Time.time - startTime) * 0.06f);
+        if (dc(divSize)) divSize += additionConstant * 0.018f * mult;
+        else
+        {
+            CanRun++;
+            sinceTime = Time.time;
+        }
+        
+        Debug.Log(Time.deltaTime);
+
+    }
+
+
     void OnGUI()
     {
 
         if (CanRun == 1)
         {
-            additionConstant = Mathf.Lerp(additionConstant, 0.005f, (Time.time - startTime) * Time.deltaTime*4);
-            if (divSize < 0.29) divSize += additionConstant * Time.deltaTime;
-            else 
-            { 
-                CanRun++;
-                sinceTime = Time.time; 
-            }
+            ShowHideBanner(x => x < 0.3, 1);
         }
         else if (CanRun == 2)
         {
@@ -86,10 +99,19 @@ public class DialogScript : MonoBehaviour
         }
         else if(CanRun == 3)
         {
-
+            additionConstant = 0.3f;
+            ShowHideBanner(x => x > 0, -1);
         }
-        GUI.Label(new Rect(0, Screen.height - Screen.height * 0.2f, Screen.width / 2, Screen.height * 0.2f), lineSoFar, myStyle);
-        //GUI.Label(new Rect(Screen.width / 2, Screen.height - Screen.height * 0.2f, Screen.width / 2, Screen.height * 0.2f), lineSoFar, myStyle);
+        else if(CanRun == 4)
+        {
+            lineReader = 0;
+            characterReader = 0;
+            lineSoFar = "";
+            CanRun = 0;
+        }
+
+
+        GUI.Label(new Rect(Screen.width/2, Screen.height - Screen.height * 0.2f, 0, 0), lineSoFar, myStyle);
         GUI.DrawTexture(new Rect(0, Screen.height - (Screen.height * divSize), Screen.width, Screen.height * divSize), background, ScaleMode.StretchToFill);
 
     }
