@@ -16,10 +16,10 @@ public class DialogScript : MonoBehaviour
     public int characterReader;
     private string lineSoFar;
     private float sinceTime;
-
+    
     private string myName;
     private string[] lines;
-    
+
     private float divSize;
     private float additionConstant;
 
@@ -34,10 +34,11 @@ public class DialogScript : MonoBehaviour
         background.SetPixel(0, 0, selectColor);
         background.Apply();
         myStyle = new GUIStyle();
-        myStyle.fontSize = 25;
+        //Constant calculated with: 1/72(point size) * 25(reference point amount) * 96(reference dpi) / 539 (reference resolution)
+        myStyle.fontSize = (int)((100f / 1617f) * Screen.height / Screen.dpi * 72);
         myStyle.fontStyle = FontStyle.Bold;
         myStyle.alignment = (TextAnchor)TextAlignment.Center;
-
+        Debug.Log(getNewLines(""));
     }
 
     public void Initialize(string name, string text, bool forceRead)
@@ -47,12 +48,13 @@ public class DialogScript : MonoBehaviour
         additionConstant = 0.3f;
         startTime = Time.time;
         divSize = 0;
+        lineSoFar = "";
     }
 
     private void Update()
     {
         //Debug.Log(CanRun + " " + Time.time);
-        if(CanRun == 2 && Input.GetKeyDown(KeyCode.Mouse0))
+        if (CanRun == 2 && Input.GetKeyDown(KeyCode.Mouse0))
         {
             lineReader++;
             characterReader = 0;
@@ -73,6 +75,7 @@ public class DialogScript : MonoBehaviour
 
     }
 
+    public static int getNewLines(string str) { return Regex.Split(str, "\n").Length; }
 
     void OnGUI()
     {
@@ -85,23 +88,26 @@ public class DialogScript : MonoBehaviour
         {
 
             //DISPLAY LINES
-            if(Time.time - sinceTime > 0.2f)
+            if (Time.time - sinceTime > 0.02f)
             {
+
                 if (lines[lineReader].Length != characterReader)
                 {
-                    if (characterReader % 40 == 0 && characterReader != 0) lineSoFar += "\n";
+                    //if (characterReader % 40 == 0 && characterReader != 0) lineSoFar += "\n"; //Splits line directly after multiples of 40 (regardless of words)
+                    if (characterReader > 45 * getNewLines(lineSoFar)) lineSoFar = lineSoFar.Insert(lineSoFar.LastIndexOf(' '), "\n");
                     lineSoFar += lines[lineReader][characterReader];
                     characterReader++;
+                    sinceTime = Time.time;
                 }
             }
 
         }
-        else if(CanRun == 3)
+        else if (CanRun == 3)
         {
             additionConstant = 0.3f;
             ShowHideBanner(x => x > 0, -1);
         }
-        else if(CanRun == 4)
+        else if (CanRun == 4)
         {
             lineReader = 0;
             characterReader = 0;
@@ -110,7 +116,8 @@ public class DialogScript : MonoBehaviour
         }
 
 
-        GUI.Label(new Rect(Screen.width/2, Screen.height - Screen.height * 0.2f, 0, 0), lineSoFar, myStyle);
+        GUI.Label(new Rect(Screen.width / 2, Screen.height - Screen.height * 0.2f, 0, 0), lineSoFar, myStyle);
+        GUI.Label(new Rect(Screen.width * 0.2f, Screen.height - (Screen.height * divSize), 0, 0), myName, myStyle);
         GUI.DrawTexture(new Rect(0, Screen.height - (Screen.height * divSize), Screen.width, Screen.height * divSize), background, ScaleMode.StretchToFill);
 
     }

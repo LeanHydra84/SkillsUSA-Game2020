@@ -348,7 +348,7 @@ public class mainScript : MonoBehaviour
 
         }
 
-        if(Input.GetKeyDown(KeyCode.K)) dg.Initialize("TestName", "I think we can put our differences behind us\nFor science.\nYou monster.", false);
+        if(Input.GetKeyDown(KeyCode.K)) dg.Initialize("GLADOS", "I think we can put our differences behind us\nFor science.\nYou monster.\nPlease place the Weighted Storage Cube on the Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button", false);
 
         //Note firing / Flashlight toggle
         if (Input.GetKeyDown(KeyCode.Mouse0))
