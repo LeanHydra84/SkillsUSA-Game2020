@@ -14,6 +14,24 @@ public class charCont : MonoBehaviour
     private float runSpeed;
     const float gravity = 20f;
     private bool canMoveOnTransition;
+    private Transform Mesh;
+    private Animator anim;
+    private bool iswalking;
+
+    public bool IsWalking
+    {
+        get => iswalking;
+        set
+        {
+            if (iswalking != value) 
+            {
+                anim.SetTrigger(value ? "StartWalk" : "EndWalk");
+            }
+            iswalking = value;
+        }
+    }
+
+
 
     //Camera Values
     public Vector3 offset; //Math will be needed to fix the offset when the camera turns into rooms
@@ -57,6 +75,8 @@ public class charCont : MonoBehaviour
         runSpeed = walkSpeed * runMult;
         cc = GetComponent<CharacterController>();
         walkDirection = new Vector3(1, 0, 1);
+        Mesh = transform.GetChild(1);
+        anim = Mesh.GetComponent<Animator>();
         //mainCam.transform.position = transform.position + offset;
     }
 
@@ -115,7 +135,7 @@ public class charCont : MonoBehaviour
     {
         
         float startTime = Time.time;
-        float journeyDistance = Vector3.Distance(t.position, transform.position);
+        //float journeyDistance = Vector3.Distance(t.position, transform.position);
         float speed = .1f;
 
 		if(Time.time > 1f) canMoveOnTransition = false;
@@ -139,7 +159,7 @@ public class charCont : MonoBehaviour
     void Update()
     {
         float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed; //Sprinting
-
+        anim.speed = Input.GetKey(KeyCode.LeftShift) ? 2 : 1;
         if (airStrafing || cc.isGrounded) mvX = mvZ = mvY = 0;
 
         if (Input.GetKeyDown(KeyCode.Space) && cc.isGrounded) mvY = jumpForce; //Jumping
@@ -161,9 +181,25 @@ public class charCont : MonoBehaviour
         mvY -= gravity * Time.deltaTime;
 
         //Making the move
-        if (walkDirection.w == 0) moveDir = new Vector3(mvX, mvY, mvZ);
+        if (walkDirection.w < float.Epsilon) moveDir = new Vector3(mvX, mvY, mvZ);
         else moveDir = new Vector3(mvZ, mvY, mvX);
+
         cc.Move(moveDir * Time.deltaTime);
+
+    }
+
+    IEnumerator MakeLerp(Quaternion one, Quaternion two, float time)
+    {
+        float StartTime = Time.time;
+        float EndTime = StartTime + time;
+
+        while (Time.time > EndTime)
+        {
+            float timeProg = (Time.time - StartTime) / time;
+            Mesh.rotation = Quaternion.Lerp(one, two, timeProg);
+            yield return new WaitForFixedUpdate();
+        }
+
 
     }
 
@@ -178,6 +214,19 @@ public class charCont : MonoBehaviour
             moveableCamera.transform.position = smoothPos;
             moveableCamera.transform.LookAt(transform);
         }
+
+        if (!moveDir.x.Equals(0) || !moveDir.z.Equals(0))
+        {
+
+            IsWalking = true;
+
+
+            Quaternion smoothedTurn = Quaternion.LookRotation(new Vector3(moveDir.z * walkDirection.z, 0, moveDir.x * -walkDirection.x).normalized);
+            StartCoroutine(MakeLerp(Mesh.rotation, smoothedTurn, 0.4f));
+            //Mesh.rotation = smoothedTurn;//Quaternion.Lerp(transform.rotation, smoothedTurn, turnSpeed * Time.deltaTime);
+        }
+        else IsWalking = false;
+
     }
 
 }

@@ -152,6 +152,7 @@ public class mainScript : MonoBehaviour
     //public static Dictionary<Material, Color> defaultColors;
     Dictionary<string, Rect> rectPositions = new Dictionary<string, Rect>();
     DialogScript dg;
+    GUIStyle style;
 
     private void GetAllMapObjects()
     {
@@ -200,7 +201,8 @@ public class mainScript : MonoBehaviour
 
 
         //Debug.Log(defaultColors.Keys);
-        Debug.Log(Screen.width + " x " + Screen.height);
+        //Debug.Log(Screen.width + " x " + Screen.height + ", " + Screen.dpi);
+        Debug.Log($"{Screen.width} x {Screen.height}, at {Screen.dpi} dpi");
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
         lightArray = new Light[gos.Length];
         for (int i = 0; i < gos.Length; i++) lightArray[i] = gos[i].GetComponent<Light>();
@@ -212,6 +214,10 @@ public class mainScript : MonoBehaviour
         );
         maskOn = false;
         CR_mask = true;
+
+        style = new GUIStyle();
+        style.normal.textColor = Color.black;
+        style.fontSize = (int)((100f / 1617f) * Screen.height / Screen.dpi * 72);
 
         //Dictionary Rects:
         rectPositions.Add("Heart", new Rect(0, 0, Screen.width / 9.16f, Screen.width / 9.16f));
@@ -276,9 +282,7 @@ public class mainScript : MonoBehaviour
 
         //Draw Time
         GUI.DrawTexture(rectPositions["Time"], timeImage, ScaleMode.ScaleToFit, true);
-        GUIStyle style = new GUIStyle();
-        style.normal.textColor = Color.black;
-        style.fontSize = goo;
+
         GUI.Label(rectPositions["TimeText"], convertTime(PlayerState.Seconds), style);
         //Flashlight
         Event current = Event.current;

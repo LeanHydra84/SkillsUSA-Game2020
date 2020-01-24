@@ -363,16 +363,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: timeImage
-      value: 
-      objectReference: {fileID: 2800000, guid: ce480a5c51d9d2a4fb5d5f17c2aa9233, type: 3}
-    - target: {fileID: 8067089829281974321, guid: 80f4a8bed8f78a1458a9dec5c1397072,
-        type: 3}
-      propertyPath: g.m_WordWrap
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80f4a8bed8f78a1458a9dec5c1397072, type: 3}
 --- !u!1 &2140591225

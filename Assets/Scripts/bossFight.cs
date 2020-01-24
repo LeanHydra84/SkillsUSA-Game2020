@@ -284,6 +284,14 @@ public class bossFight : MonoBehaviour
         }
     }
 
+    IEnumerator MakeLerp(Vector3 one, Vector3 two, float time)
+    {
+        float StartTime = Time.time;
+        float EndTime = StartTime + time;
+
+        yield return new WaitForFixedUpdate();
+    }
+
     void LateUpdate()
     {
         targetPos = player.position - transform.position;
