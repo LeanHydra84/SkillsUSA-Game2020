@@ -38,7 +38,7 @@ public static class PlayerState
         seconds = 0;
         canLose = true;
         ammo = 0;
-        IsInBossFight = true; //SHOULD NOT BE TRUE
+        IsInBossFight = false; //SHOULD NOT BE TRUE
     }
 
     public static int Ammo
@@ -152,6 +152,7 @@ public class mainScript : MonoBehaviour
     //public static Dictionary<Material, Color> defaultColors;
     Dictionary<string, Rect> rectPositions = new Dictionary<string, Rect>();
     DialogScript dg;
+    GUIStyle style;
 
     private void GetAllMapObjects()
     {
@@ -200,7 +201,8 @@ public class mainScript : MonoBehaviour
 
 
         //Debug.Log(defaultColors.Keys);
-        Debug.Log(Screen.width + " x " + Screen.height);
+        //Debug.Log(Screen.width + " x " + Screen.height + ", " + Screen.dpi);
+        Debug.Log($"{Screen.width} x {Screen.height}, at {Screen.dpi} dpi");
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
         lightArray = new Light[gos.Length];
         for (int i = 0; i < gos.Length; i++) lightArray[i] = gos[i].GetComponent<Light>();
@@ -212,6 +214,10 @@ public class mainScript : MonoBehaviour
         );
         maskOn = false;
         CR_mask = true;
+
+        style = new GUIStyle();
+        style.normal.textColor = Color.black;
+        style.fontSize = (int)((100f / 1617f) * Screen.height / Screen.dpi * 72);
 
         //Dictionary Rects:
         rectPositions.Add("Heart", new Rect(0, 0, Screen.width / 9.16f, Screen.width / 9.16f));
@@ -248,19 +254,14 @@ public class mainScript : MonoBehaviour
         CR_mask = false;
         yield return new WaitForSeconds(0.5f);
 
-        if (a)
-        {
-            charCont.mainCam.cullingMask &= ~(1 << LayerMask.NameToLayer("ghosts"));//Enables culling mask for ghosts
-            maskOn = false;
-        }
-        else
-        {
-            charCont.mainCam.cullingMask |= 1 << LayerMask.NameToLayer("ghosts"); //Enables culling mask for the ghosts
-            maskOn = true;
-        }
+        if (a) charCont.mainCam.cullingMask &= ~(1 << LayerMask.NameToLayer("ghosts"));//Enables culling mask for ghosts
+        else charCont.mainCam.cullingMask |= 1 << LayerMask.NameToLayer("ghosts"); //Enables culling mask for the ghosts
+        
+        maskOn = !a;
 
         for (int i = 0; i < lightArray.Length; i++)
             lightArray[i].intensity = maskOn ? (lightArray[i].intensity * intensityMult) : (lightArray[i].intensity / intensityMult);
+
         CR_mask = true;
 
     }
@@ -276,9 +277,7 @@ public class mainScript : MonoBehaviour
 
         //Draw Time
         GUI.DrawTexture(rectPositions["Time"], timeImage, ScaleMode.ScaleToFit, true);
-        GUIStyle style = new GUIStyle();
-        style.normal.textColor = Color.black;
-        style.fontSize = goo;
+
         GUI.Label(rectPositions["TimeText"], convertTime(PlayerState.Seconds), style);
         //Flashlight
         Event current = Event.current;
@@ -336,6 +335,24 @@ public class mainScript : MonoBehaviour
 
     }
 
+    void TryOpenDoors(Collider[] cols)
+    {
+        foreach(Collider hit in cols)
+        {
+            if(hit.tag == "Puzzle")
+            {
+                hit.gameObject.AddComponent<Minigame_puzzle>();
+            }
+
+
+            if(hit.tag == "door")
+            {
+                hit.transform.parent.parent.gameObject.GetComponent<DoorHandler>().OpenCloseDoor();
+                return;
+            }
+        }
+    }
+
     void Update()
     {
         PlayerState.Time = PlayerState.Time + Time.deltaTime;
@@ -386,6 +403,14 @@ public class mainScript : MonoBehaviour
            		Application.Quit();
 		}
         */
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            //RaycastHit[] hits = Physics.CapsuleCastAll();
+            Collider[] hits = Physics.OverlapSphere(transform.position, 2f);
+            TryOpenDoors(hits);
+        }
+
     }
 
 }

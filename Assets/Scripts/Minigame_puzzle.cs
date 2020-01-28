@@ -34,6 +34,7 @@ public class Minigame_puzzle : MonoBehaviour
     void GameWin()
     {
         Debug.Log("You win");
+        Destroy(this);
     }
 
     void randomize()

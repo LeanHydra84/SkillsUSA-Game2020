@@ -35,15 +35,15 @@ public class DialogScript : MonoBehaviour
         background.Apply();
         myStyle = new GUIStyle();
         //Constant calculated with: 1/72(point size) * 25(reference point amount) * 96(reference dpi) / 539 (reference resolution)
-        myStyle.fontSize = (int)((100f / 1617f) * Screen.height / Screen.dpi * 72);
+        myStyle.fontSize = (int)(100f / 1617f * Screen.height / Screen.dpi * 72);
         myStyle.fontStyle = FontStyle.Bold;
         myStyle.alignment = (TextAnchor)TextAlignment.Center;
-        Debug.Log(getNewLines(""));
     }
 
     public void Initialize(string name, string text, bool forceRead)
     {
         lines = Regex.Split(text, "\r\n ?|\n");
+        myName = name;
         CanRun = 1;
         additionConstant = 0.3f;
         startTime = Time.time;
@@ -53,19 +53,23 @@ public class DialogScript : MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log(CanRun + " " + Time.time);
         if (CanRun == 2 && Input.GetKeyDown(KeyCode.Mouse0))
         {
             lineReader++;
             characterReader = 0;
             lineSoFar = "";
-            if (lineReader == lines.Length) CanRun++;
+            if (lineReader == lines.Length)
+            {
+                CanRun++;
+                startTime = Time.time;
+            }
         }
     }
 
     void ShowHideBanner(divCheck dc, int mult)
     {
         additionConstant = Mathf.Lerp(additionConstant, 0.006f, (Time.time - startTime) * 0.06f);
+        Debug.Log(additionConstant);
         if (dc(divSize)) divSize += additionConstant * 0.018f * mult;
         else
         {
@@ -93,7 +97,6 @@ public class DialogScript : MonoBehaviour
 
                 if (lines[lineReader].Length != characterReader)
                 {
-                    //if (characterReader % 40 == 0 && characterReader != 0) lineSoFar += "\n"; //Splits line directly after multiples of 40 (regardless of words)
                     if (characterReader > 45 * getNewLines(lineSoFar)) lineSoFar = lineSoFar.Insert(lineSoFar.LastIndexOf(' '), "\n");
                     lineSoFar += lines[lineReader][characterReader];
                     characterReader++;
@@ -105,7 +108,9 @@ public class DialogScript : MonoBehaviour
         else if (CanRun == 3)
         {
             additionConstant = 0.3f;
-            ShowHideBanner(x => x > 0, -1);
+
+            ShowHideBanner(x => x > float.Epsilon, -1);
+
         }
         else if (CanRun == 4)
         {
@@ -117,7 +122,7 @@ public class DialogScript : MonoBehaviour
 
 
         GUI.Label(new Rect(Screen.width / 2, Screen.height - Screen.height * 0.2f, 0, 0), lineSoFar, myStyle);
-        GUI.Label(new Rect(Screen.width * 0.2f, Screen.height - (Screen.height * divSize), 0, 0), myName, myStyle);
+        GUI.Label(new Rect(Screen.width * 0.2f, Screen.height - ((Screen.height * divSize) - Screen.height / 90), 0, 0), myName, myStyle);
         GUI.DrawTexture(new Rect(0, Screen.height - (Screen.height * divSize), Screen.width, Screen.height * divSize), background, ScaleMode.StretchToFill);
 
     }
