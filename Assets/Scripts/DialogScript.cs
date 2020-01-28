@@ -69,7 +69,6 @@ public class DialogScript : MonoBehaviour
     void ShowHideBanner(divCheck dc, int mult)
     {
         additionConstant = Mathf.Lerp(additionConstant, 0.006f, (Time.time - startTime) * 0.06f);
-        Debug.Log(additionConstant);
         if (dc(divSize)) divSize += additionConstant * 0.018f * mult;
         else
         {
@@ -79,7 +78,7 @@ public class DialogScript : MonoBehaviour
 
     }
 
-    public static int getNewLines(string str) { return Regex.Split(str, "\n").Length; }
+    public static int getNewLines(string str) => Regex.Split(str, "\n").Length;
 
     void OnGUI()
     {

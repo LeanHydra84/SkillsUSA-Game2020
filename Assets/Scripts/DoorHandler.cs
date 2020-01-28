@@ -4,20 +4,23 @@ using UnityEngine;
 
 public class DoorHandler : MonoBehaviour
 {
-    
+
+    public bool locked;
+
     public bool Open { get; set; }
     private Animator anim;
 
-    void Start()
-    {
-        anim = GetComponent<Animator>();
-    }
+    void Start() => anim = GetComponent<Animator>();
 
     public void OpenCloseDoor()
     {
-        if (Open) anim.SetTrigger("Close");
-        else anim.SetTrigger("Open");
-        Open = !Open;
+        if(!locked)
+        {
+            if (Open) anim.SetTrigger("Close");
+            else anim.SetTrigger("Open");
+            Open = !Open;
+        }
+        
     }
 
 }

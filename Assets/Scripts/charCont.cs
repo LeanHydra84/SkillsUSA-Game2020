@@ -17,7 +17,7 @@ public class charCont : MonoBehaviour
     private Transform Mesh;
     private Animator anim;
     private bool iswalking;
-
+    private int camDirection;
     private int direction;
     private int turnDirection;
 
@@ -116,6 +116,7 @@ public class charCont : MonoBehaviour
             walkDirection = rc.md;
             StartCoroutine(lerpCamera(rc.roomCam.transform, rc.isHallway));
             //StartCoroutine(mainScript.EnableRoom(rc.assets));
+            
             c1 = other;
         }
     }
@@ -145,12 +146,20 @@ public class charCont : MonoBehaviour
         }
     }
 
+    int GetCamDirection(Vector4 m)
+    {
+        int cd = (int)((m.x * 10) + 20);
+        cd += (int)(m.z + 2);
+        cd *= (m.w < float.Epsilon) ? 1 : -1;
+        return cd;
+    }
+
     IEnumerator lerpCamera(Transform t, bool isHall)
     {
 
-
-        if (Time.time > 0.1f && t.rotation.y != mainCam.transform.rotation.y) canMoveOnTransition = false;
-        Debug.Log(mainCam.transform.rotation.y + " vs. " + t.rotation.y + (mainCam.transform.rotation.y == t.rotation.y));
+        
+        if (Time.time > 0.1f && camDirection != GetCamDirection(walkDirection)) canMoveOnTransition = false;
+        camDirection = GetCamDirection(walkDirection);
 
         if (isHall)
         {

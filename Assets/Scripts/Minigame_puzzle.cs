@@ -10,25 +10,35 @@ public class Minigame_puzzle : MonoBehaviour
     public int length;
     public int counter;
 
+    private int addCurrent;
+
     bool canAdd;
 
-    public GameObject[] showSprites;
+    //public GameObject[] showSprites;
+    private Texture2D[] showSprites;
     AudioSource aud;
 
-    Color fullVis;
-    Color deadFoxtrot;
 
     void Start()
     {
+        Object[] sprites = Resources.LoadAll("Minigame_Sprites", typeof(Texture2D));
+        showSprites = new Texture2D[8];
+        int counter = 0;
+        foreach(Object a in sprites)
+        {
+            showSprites[counter] = (Texture2D)a;
+            counter++;
+        }
+
+        addCurrent = 0;
+
         //Randomization goes here
         StartCoroutine(EndAttempt(0.2f));
         aud = GetComponent<AudioSource>();
 
-        fullVis = new Color(1, 1, 1, 1);
-        deadFoxtrot = new Color(1, 1, 1, 0.3f);
 
-        foreach (GameObject g in showSprites)
-            g.GetComponent<SpriteRenderer>().color = deadFoxtrot;
+
+        addCurrent = 4;
     }
 
     void GameWin()
@@ -59,21 +69,20 @@ public class Minigame_puzzle : MonoBehaviour
         {
             for (int k = 0; k < 4; k++)
             {
-                showSprites[k].GetComponent<SpriteRenderer>().color = fullVis;
+                addCurrent = 4;
             }
             yield return new WaitForSeconds(0.1f);
             for (int k = 0; k < 4; k++)
             {
-                showSprites[k].GetComponent<SpriteRenderer>().color = deadFoxtrot;
+                addCurrent = 0;
             }
             yield return new WaitForSeconds(0.1f);
         }
         for (int i = 0; i < hashString.Length; i++)
         {
-            SpriteRenderer spr = showSprites[int.Parse(hashString[i].ToString()) - 1].GetComponent<SpriteRenderer>();
-            spr.color = fullVis;
+            addCurrent = 0;
             yield return new WaitForSeconds(time);
-            spr.color = deadFoxtrot;
+            addCurrent = 4;
             yield return new WaitForSeconds(time);
         }
 
@@ -82,10 +91,9 @@ public class Minigame_puzzle : MonoBehaviour
 
     IEnumerator makeGlow(int select)
     {
-        SpriteRenderer spr = showSprites[select - 1].GetComponent<SpriteRenderer>();
-        spr.color = fullVis;
+        addCurrent = 0;
         yield return new WaitForSeconds(0.2f);
-        spr.color = deadFoxtrot;
+        addCurrent = 4;
 
     }
 
@@ -101,6 +109,11 @@ public class Minigame_puzzle : MonoBehaviour
         if (count >= 0)
             if (hashString[count] != checkString[count]) return true;
         return false;
+    }
+
+    private void OnGUI()
+    {
+        GUI.DrawTexture(new Rect(Screen.width/2,Screen.height-Screen.height*0.8f,Screen.width/10,Screen.height/5), showSprites[0+addCurrent], ScaleMode.ScaleToFit);
     }
 
     void Update()
