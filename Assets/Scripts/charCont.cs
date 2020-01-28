@@ -17,6 +17,7 @@ public class charCont : MonoBehaviour
     private Transform Mesh;
     private Animator anim;
     private bool iswalking;
+
     private int direction;
     private int turnDirection;
 
@@ -86,9 +87,10 @@ public class charCont : MonoBehaviour
         runSpeed = walkSpeed * runMult;
         cc = GetComponent<CharacterController>();
         walkDirection = new Vector3(1, 0, 1);
+
         Mesh = transform.GetChild(0);
         anim = Mesh.GetChild(0).GetComponent<Animator>();
-        //mainCam.transform.position = transform.position + offset;
+
         anim.SetTrigger("StartWalk");
         anim.enabled = false;
     }
@@ -146,6 +148,7 @@ public class charCont : MonoBehaviour
     IEnumerator lerpCamera(Transform t, bool isHall)
     {
 
+
         if (Time.time > 0.1f && t.rotation.y != mainCam.transform.rotation.y) canMoveOnTransition = false;
         Debug.Log(mainCam.transform.rotation.y + " vs. " + t.rotation.y + (mainCam.transform.rotation.y == t.rotation.y));
 
@@ -183,6 +186,7 @@ public class charCont : MonoBehaviour
     {
         float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed; //Sprinting
         anim.speed = Input.GetKey(KeyCode.LeftShift) ? 2 : 1.2f;
+
         if (airStrafing || cc.isGrounded) mvX = mvZ = mvY = 0;
 
         if (Input.GetKeyDown(KeyCode.Space) && cc.isGrounded) mvY = jumpForce; //Jumping
@@ -207,6 +211,7 @@ public class charCont : MonoBehaviour
         else moveDir = new Vector3(mvZ, mvY, mvX);
 
         Direction = (int)((mvX / speed) * 10 + (mvZ / speed));
+
         cc.Move(moveDir * Time.deltaTime);
 
     }
@@ -258,6 +263,7 @@ public class charCont : MonoBehaviour
 
             //Mesh.rotation = smoothedTurn;//Quaternion.Lerp(transform.rotation, smoothedTurn, turnSpeed * Time.deltaTime);
         }
+
         else IsWalking = false;
 
     }
