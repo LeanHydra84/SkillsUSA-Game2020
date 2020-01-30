@@ -1,0 +1,9 @@
+Gold Texture Metallic: 1.000
+
+Silver Texture Metallic: .910
+
+Mirror Texture Metallic: .655
+
+Glass Green Material: Glass or Transparent
+
+Water Texture Metallic: 1.000  Roughness: .136
