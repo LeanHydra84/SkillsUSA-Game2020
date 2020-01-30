@@ -1,0 +1,337 @@
+fileFormatVersion: 2
+guid: 7f6a43bd975fcf84da99773016b15d9d
+ModelImporter:
+  serializedVersion: 26
+  internalIDToNameTable:
+  - first:
+      74: 6093225430303232669
+    second: Armature|ArmatureAction.002
+  - first:
+      74: 4743084820616853705
+    second: Armature|CameraAction
+  - first:
+      74: -3132138357062868775
+    second: Armature|Cylinder.006Action
+  - first:
+      74: 2518234126993040402
+    second: Armature|Empty.005Action.001
+  - first:
+      74: 2920023865792766560
+    second: Armature|PlaneAction
+  - first:
+      74: -531212024842103935
+    second: Empty.005|CameraAction
+  - first:
+      74: -2198731007053009263
+    second: Empty.005|Cylinder.006Action
+  - first:
+      74: -7309535123462438281
+    second: Empty.005|Empty.005Action.001
+  - first:
+      74: 1334383158759787359
+    second: Empty.005|PlaneAction
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CharacterSkin
+    second: {fileID: 2100000, guid: c9dd15478d9d3254fa0eeb2152dffd07, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Eyes
+    second: {fileID: 2100000, guid: 6ea3ec0a4ca172c4da81f3129aafa221, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Backpack.Ball
+    second: {fileID: 2100000, guid: 1d3c809e53dcd944888bdd2312415c66, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Backpack.Body
+    second: {fileID: 2100000, guid: f7d4bbeb36937af4d83607f8a14b3be9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Backpack.Button1
+    second: {fileID: 2100000, guid: 4efe69ffbe9248f4781c6597f0115f84, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Backpack.Button2
+    second: {fileID: 2100000, guid: 3de8eef7cc35aa642a3b4cdcbb471510, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Backpack.Button3
+    second: {fileID: 2100000, guid: f1bbb1ec46b202141b75fb1024863a07, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Backpack.Flaps
+    second: {fileID: 2100000, guid: 69f1b0edbc0582247ac3621121c82f44, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Backpack.Metal
+    second: {fileID: 2100000, guid: 5445090fa42758e4c829ceaffc5841c4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Backpack.Straps
+    second: {fileID: 2100000, guid: 7edc5625439a4c348a558b5f21856509, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Backpack.StrapsRoll
+    second: {fileID: 2100000, guid: f2d1f2e29f73f2d43b5c37ed0cc735bf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Backpack.Top
+    second: {fileID: 2100000, guid: 25c20ccae76c93542a99d1d59e98da8c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Boot.Black
+    second: {fileID: 2100000, guid: 86515d49af059564eb5ba8745e7827d5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Boot.Shirt
+    second: {fileID: 2100000, guid: 86a82651e63fe3b4daa40979f9022b8d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Boot.Yellow
+    second: {fileID: 2100000, guid: 30c62a1117fb78546b4ff2619046f5ff, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Coat.Body
+    second: {fileID: 2100000, guid: 965e2ee8fee803b4dab4779287a39d7b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Coat.MetalRings.001
+    second: {fileID: 2100000, guid: 3f4af0064a517bc419b0adeaa35f0f87, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Coat.MetalSleeves.001
+    second: {fileID: 2100000, guid: f82facf7b3e919544bb628060d6de3c5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Coat.MetalZipper
+    second: {fileID: 2100000, guid: cf1fca31635c8f84d84f3164c7c51fb9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Coat.Ring
+    second: {fileID: 2100000, guid: a1e95a00be33ae6408afd35ecf994d54, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Coat.Straps
+    second: {fileID: 2100000, guid: c79113e8c7b3ef9449e3065bd228771b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Coat.Top
+    second: {fileID: 2100000, guid: 6f282df6fa1fe004a9df665fa19d8c24, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Hat.Belt
+    second: {fileID: 2100000, guid: 25983bf4c32fe764cbed6fc60b004a46, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Hat.Belt.UnderSide
+    second: {fileID: 2100000, guid: 202e0d9c3b216bd4fae6d2aa3e7645cc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Hat.BeltStrap
+    second: {fileID: 2100000, guid: 1d99c56006e68e54891a4d7161103b23, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Hat.Body
+    second: {fileID: 2100000, guid: a839ba9eb95ee484e98c1ffb733486c1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Hat.Metal
+    second: {fileID: 2100000, guid: 44ee491eeaf210e46ba02df6d4489e70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Hat.MetalBall
+    second: {fileID: 2100000, guid: 3f593292b4ccbdb4c85ee3659eb27a93, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Pants
+    second: {fileID: 2100000, guid: f6d1f0aefa1e2994cbfaf7f6dc94f954, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Skin
+    second: {fileID: 2100000, guid: f411aab5150d67e48af8ac00af23945e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Umb.Cloth
+    second: {fileID: 2100000, guid: 1fb22a82694ff6c4bb1c4f729ca36abc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Umb.Handle
+    second: {fileID: 2100000, guid: f24dcc2627c2c7546bdb6b11467f6db7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Umb.Hook
+    second: {fileID: 2100000, guid: ce17f5c5b2219854fb7899db766c927f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Umb.Metal
+    second: {fileID: 2100000, guid: 6d289cd2820d6224283ffacb01fc0a64, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Umb.Point
+    second: {fileID: 2100000, guid: 07fbb923f7edcfc4e872f2ffe13988d1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[FrogWitch]Umb.Strap
+    second: {fileID: 2100000, guid: 90c897a7e92a2d647a5909957d0e3c26, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[Item]Flashlight.Body
+    second: {fileID: 2100000, guid: da9f1582564fd8d4ebf49150c23667a4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[Item]Flashlight.Button
+    second: {fileID: 2100000, guid: 1d921f02db6d2f443810d1015d8d9e03, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[Item]Flashlight.Front
+    second: {fileID: 2100000, guid: fd75e466cae94804098876af2fd19a3c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[Item]Flashlight.Glass
+    second: {fileID: 2100000, guid: 94455a4ce45310349bc0a45c44a943fd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[Item]Flashlight.InsideRIm
+    second: {fileID: 2100000, guid: 736d92dde45c51e4f92b04bb4f13013d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[Item]Flashlight.Lightbulb
+    second: {fileID: 2100000, guid: 54975d2670d193744a3ba7bda31ac494, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_[Item]Flashlight.Ring
+    second: {fileID: 2100000, guid: c5b811a7460207b42b4f9639f4a57cd0, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
