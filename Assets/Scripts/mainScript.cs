@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using System.IO;
 using System;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Linq;
+using UnityEngine.InputSystem;
 
 public static class PlayerState
 {
@@ -16,13 +18,12 @@ public static class PlayerState
         canLose = true;
     }
 
-    static int keys;
+    static int pianoKeys;
     static int health;
     static float time;
     static int seconds;
     static bool canLose;
     static int ammo;
-
 
     public static float[] position;
     public static float x;
@@ -32,13 +33,18 @@ public static class PlayerState
     static PlayerState()
     {
         position = new float[2];
-        keys = 0;
+        Keys = new int[4];
+        pianoKeys = 0;
         health = 4;
         time = 0f;
         seconds = 0;
         canLose = true;
         ammo = 0;
         IsInBossFight = false; //SHOULD NOT BE TRUE
+
+        System.Random rnd = new System.Random();
+        Bosses = Enumerable.Range(1, 4).OrderBy(r => rnd.Next()).ToArray();
+
     }
 
     public static int Ammo
@@ -48,6 +54,8 @@ public static class PlayerState
     }
 
     public static bool IsInBossFight { get; set; }
+
+    public static int[] Bosses { get; }
 
     public static int Health
     {
@@ -62,11 +70,9 @@ public static class PlayerState
         }
     }
 
-    public static int Keys
-    {
-        get => keys;
-        set { if (value > keys || value == 0) keys = value; }
-    }
+    public static int PianoKeys { get => pianoKeys; set => pianoKeys = value; }
+
+    public static int[] Keys { get; set; }
 
     public static float Time
     {
@@ -83,13 +89,13 @@ public static class PlayerState
     public static void Load()
     {
         BinaryFormatter formatter = new BinaryFormatter();
-        Stream stream = new FileStream(Application.persistentDataPath + "//save.txt", FileMode.Open, FileAccess.Read);
+        Stream stream = new FileStream(Application.persistentDataPath + "/save.txt", FileMode.Open, FileAccess.Read);
         object saveObj = formatter.Deserialize(stream);
         stream.Close();
         transDat trans = (transDat)saveObj;
 
         health = trans.health;
-        keys = trans.keys;
+        PianoKeys = trans.keys;
         time = trans.time;
         seconds = (int)time;
 
@@ -103,7 +109,7 @@ public static class PlayerState
     {
         transDat trans = new transDat
         {
-            keys = keys,
+            keys = PianoKeys,
             health = health,
             time = time,
 
@@ -125,13 +131,22 @@ public static class PlayerState
 public class mainScript : MonoBehaviour
 {
 
+    public static PlayerControls controls;
+
     //Misc
     private Light flashlight;
+    private Vector3 flashDirection;
     public float timeScale;
     public Text time;
     public bool showSeconds;
     private RaycastHit flashHit;
     public GUIStyle g;
+    public Text lockText;
+
+    //Interaction Booleans
+    private bool LeftClick;
+    private bool Interact;
+
     //Mask
     public bool maskOn;
     private bool CR_mask;
@@ -144,19 +159,19 @@ public class mainScript : MonoBehaviour
     public Texture2D timeImage;
     private bool canPause;
     public int goo;
+    private Image fadeBlack;
 
     //Array of lights for the mask
     public Light[] lightArray;
     public static mainScript instance;
     private static List<GameObject> AllRooms;
-    //public static Dictionary<Material, Color> defaultColors;
     Dictionary<string, Rect> rectPositions = new Dictionary<string, Rect>();
     DialogScript dg;
     GUIStyle style;
 
     private void GetAllMapObjects()
     {
-        GameObject map_parent = GameObject.Find("Map.Furniture.V4");
+        GameObject map_parent = GameObject.Find("TheMap");
         AllRooms = new List<GameObject>();
         for (int i = 0; i < map_parent.transform.childCount; i++)
         {
@@ -164,18 +179,14 @@ public class mainScript : MonoBehaviour
         }
 
     }
-	/*
-	private void GetMaterialColors()
-	{
-        defaultColors = new Dictionary<Material, Color>();
 
-		foreach(GameObject x in AllRooms)
-		{
-			Renderer rend = x.GetComponent<Renderer>();
-			foreach(Material y in rend.materials) defaultColors.Add(y, y.color);
-		}
-	}
-	*/
+    void FlashLightAim(InputAction.CallbackContext ctx)
+    {
+        Vector2 temp = -ctx.ReadValue<Vector2>();
+        flashDirection = new Vector3(temp.x, 0, temp.y).normalized;
+    }
+
+
     private void Awake()
     {
 		instance = this;
@@ -183,6 +194,14 @@ public class mainScript : MonoBehaviour
         //if (AllRooms == null)
         //GetAllMapObjects();
 
+        controls = new PlayerControls();
+        controls.Controller.Enable();
+
+        controls.Controller.FlashlightAim.performed += ctx => FlashLightAim(ctx);
+        controls.Controller.FlashlightAim.canceled += ctx => flashDirection = Vector2.zero;
+        controls.Controller.ShootFlashlight.started += ctx => LeftClick = true;
+        controls.Controller.Interact.started += ctx => Interact = true;
+        controls.Controller.QuitGame.performed += ctx => Application.Quit();
 
         if (!menu.newGame)
         {
@@ -195,12 +214,10 @@ public class mainScript : MonoBehaviour
 
     void Start()
     {
-        //if (defaultColors == null)
-        //GetMaterialColors();
+
         dg = gameObject.AddComponent<DialogScript>();
-
-
-        //Debug.Log(defaultColors.Keys);
+        fadeBlack = charCont.mainCam.transform.GetChild(0).GetChild(0).GetComponent<Image>();
+        fadeBlack.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
         //Debug.Log(Screen.width + " x " + Screen.height + ", " + Screen.dpi);
         Debug.Log($"{Screen.width} x {Screen.height}, at {Screen.dpi} dpi");
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
@@ -266,9 +283,11 @@ public class mainScript : MonoBehaviour
 
     }
 
+
+
     void OnGUI()
     {
-
+        Debug.Log(flashDirection);
         //Draw Health
         GUI.DrawTexture(rectPositions["Heart"], heart[PlayerState.Health], ScaleMode.ScaleToFit, true);
 
@@ -280,14 +299,23 @@ public class mainScript : MonoBehaviour
 
         GUI.Label(rectPositions["TimeText"], convertTime(PlayerState.Seconds), style);
         //Flashlight
-        Event current = Event.current;
-        Vector2 mousePos = new Vector2();
 
-        mousePos.x = current.mousePosition.x;
-        mousePos.y = charCont.mainCam.pixelHeight - current.mousePosition.y;
+        if(flashDirection == Vector3.zero)
+        {
+            Event current = Event.current;
+            Vector2 mousePos = new Vector2();
 
-        Ray ray = charCont.mainCam.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, charCont.mainCam.nearClipPlane));
-        if (Physics.Raycast(ray, out flashHit, Mathf.Infinity, lmask)) flashlight.transform.LookAt(flashHit.point);
+            mousePos.x = current.mousePosition.x;
+            mousePos.y = charCont.mainCam.pixelHeight - current.mousePosition.y;
+
+            Ray ray = charCont.mainCam.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, charCont.mainCam.nearClipPlane));
+            if (Physics.Raycast(ray, out flashHit, Mathf.Infinity, lmask)) flashlight.transform.LookAt(flashHit.point);
+        }
+        else
+        {
+            flashlight.transform.rotation = Quaternion.LookRotation(flashDirection);
+        }
+        
 
         //flashlight.transform.eulerAngles = new Vector3(Mathf.Clamp(flashlight.transform.eulerAngles.x, -20f, 15f), flashlight.transform.eulerAngles.y, 0f);
         // ^ Clamps vertical rotation between two constants. Issue: Currently locks to one constant, doesn't go negative
@@ -297,7 +325,7 @@ public class mainScript : MonoBehaviour
         //MAIN MENU
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-
+            Application.Quit();
         }
 
     }
@@ -328,7 +356,7 @@ public class mainScript : MonoBehaviour
             }
             else if (col.gameObject.tag == "pianoKey")
             {
-                PlayerState.Keys += 1;
+                PlayerState.PianoKeys += 1;
                 Destroy(col.gameObject);
             }
         }
@@ -342,12 +370,16 @@ public class mainScript : MonoBehaviour
             if(hit.tag == "Puzzle")
             {
                 hit.gameObject.AddComponent<Minigame_puzzle>();
+                StartCoroutine(charCont.focusCamera(hit.transform.position));
+                return;
             }
 
 
             if(hit.tag == "door")
             {
-                hit.transform.parent.parent.gameObject.GetComponent<DoorHandler>().OpenCloseDoor();
+                DoorHandler dh = hit.transform.parent.parent.gameObject.GetComponent<DoorHandler>();
+                dh.OpenCloseDoor();
+                if (dh.locked) lockText.GetComponent<Animator>().Play("fadeInOut");
                 return;
             }
         }
@@ -357,6 +389,10 @@ public class mainScript : MonoBehaviour
     {
         PlayerState.Time = PlayerState.Time + Time.deltaTime;
         //if (time != null) time.text = convertTime(PlayerState.Seconds);
+
+        if (Input.GetKeyDown(KeyCode.L)) fadeBlack.GetComponent<Animator>().Play("ScreenFadeOut");
+        if (Input.GetKeyDown(KeyCode.J)) fadeBlack.GetComponent<Animator>().Play("ScreenFadeIn");
+
 
         //Lose-Death condition
         if (PlayerState.Health <= 0)
@@ -368,13 +404,17 @@ public class mainScript : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.K)) dg.Initialize("GLADOS", "I think we can put our differences behind us\nFor science.\nYou monster.\nPlease place the Weighted Storage Cube on the Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button", false);
 
         //Note firing / Flashlight toggle
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0)) LeftClick = true;
+
+        if(LeftClick)
         {
             if (PlayerState.IsInBossFight)
             {
                 if (PlayerState.Ammo > 0)
                 {
-                    Rigidbody a = Instantiate(bossFight.projectile, transform.position, Quaternion.LookRotation(flashHit.point - transform.position));
+
+                    Quaternion startRot = (flashDirection == Vector3.zero) ? Quaternion.LookRotation(flashHit.point - transform.position) : Quaternion.LookRotation(flashDirection);
+                    Rigidbody a = Instantiate(bossFight.projectile, transform.position, startRot);
 
                     a.gameObject.layer = LayerMask.NameToLayer("returnFire");
                     Bullet bul = new Bullet
@@ -393,7 +433,7 @@ public class mainScript : MonoBehaviour
                 flashlight.gameObject.GetComponent<AudioSource>().Play();
             }
         }
-
+        LeftClick = false;
         if (Input.GetKeyDown(KeyCode.M) && CR_mask)
             StartCoroutine(mask(maskOn));
         /*
@@ -404,13 +444,14 @@ public class mainScript : MonoBehaviour
 		}
         */
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E)) Interact = true;
+        if(Interact)
         {
             //RaycastHit[] hits = Physics.CapsuleCastAll();
             Collider[] hits = Physics.OverlapSphere(transform.position, 2f);
             TryOpenDoors(hits);
         }
-
+        Interact = false;
     }
 
 }

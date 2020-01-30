@@ -8,6 +8,9 @@ TagManager:
   - room_lights
   - triggerRoom
   - boss
+  - doorHandler
+  - door
+  - Puzzle
   layers:
   - Default
   - TransparentFX

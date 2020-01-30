@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class charCont : MonoBehaviour
 {
+
+    PlayerControls controls;
 
     //Values
     public bool debug = false;
@@ -13,14 +16,21 @@ public class charCont : MonoBehaviour
     public float jumpForce = 8f;
     private float runSpeed;
     const float gravity = 20f;
-    private bool canMoveOnTransition;
+
+    private bool sprint;
     private Transform Mesh;
     private Animator anim;
     private bool iswalking;
     private int camDirection;
     private int direction;
     private int turnDirection;
+    private static Transform roomCamPosition;
+    public static bool shouldBeFocused;
 
+
+    //Movement booleans
+    private static bool isInPuzzle;
+    private bool canMoveOnTransition;
 
     //Camera Values
     public Vector3 offset; //Math will be needed to fix the offset when the camera turns into rooms
@@ -41,6 +51,11 @@ public class charCont : MonoBehaviour
     public bool airStrafing = false;
 
     private Collider c1;
+
+    Vector2 controllermover;
+
+    //Trigger booleans
+    bool setJump;
 
     public int Direction
     {
@@ -74,8 +89,19 @@ public class charCont : MonoBehaviour
         c.enabled = true;
     }
 
+
+
     private void Awake()
     {
+        controls = new PlayerControls();
+        controls.Controller.Enable();
+
+        controls.Controller.JumpAction.performed += ctx => setJump = true;
+        controls.Controller.Move.performed += ctx => controllermover = ctx.ReadValue<Vector2>();
+        controls.Controller.Move.canceled += ctx => controllermover = Vector2.zero;
+        controls.Controller.Sprint.performed += ctx => sprint = true;
+        controls.Controller.Sprint.canceled += ctx => sprint = false;
+
         allCams = Camera.allCameras;
         EnableCamera(Camera.main);
     }
@@ -114,8 +140,9 @@ public class charCont : MonoBehaviour
             }
             roomClass rc = other.gameObject.GetComponent<roomClass>();
             walkDirection = rc.md;
-            StartCoroutine(lerpCamera(rc.roomCam.transform, rc.isHallway));
-            //StartCoroutine(mainScript.EnableRoom(rc.assets));
+            roomCamPosition = rc.roomCam.transform;
+            StartCoroutine(lerpCamera(roomCamPosition, rc.isHallway));
+            StartCoroutine(mainScript.EnableRoom(rc.assets));
             
             c1 = other;
         }
@@ -153,6 +180,51 @@ public class charCont : MonoBehaviour
         cd *= (m.w < float.Epsilon) ? 1 : -1;
         return cd;
     }
+
+    public static bool ShouldFocus() { return shouldBeFocused; }
+
+    public static IEnumerator focusCamera(Vector3 focusPoint)
+    {
+        isInPuzzle = true;
+        float StartTime = Time.time;
+        float EndTime = 0.2f + StartTime;
+        Vector3 startPoint = mainCam.transform.position;
+        focusPoint += new Vector3(0, 2, 2);
+        Quaternion toRotation = Quaternion.LookRotation(focusPoint - mainCam.transform.position);
+        Quaternion fromRotation = mainCam.transform.rotation;
+
+        while (Time.time < EndTime)
+        {
+            float timeProg = (Time.time - StartTime) / 0.2f;
+            mainCam.transform.rotation = Quaternion.Lerp(fromRotation, toRotation, timeProg);
+            mainCam.transform.position = Vector3.Lerp(startPoint, focusPoint, timeProg);
+            yield return new WaitForFixedUpdate();
+        }
+
+        yield return new WaitUntil(ShouldFocus);
+
+        StartTime = Time.time;
+        EndTime = 0.2f + StartTime;
+
+        while (Time.time < EndTime)
+        {
+            float timeProg = (Time.time - StartTime) / 0.2f;
+            mainCam.transform.rotation = Quaternion.Lerp(toRotation, roomCamPosition.rotation, timeProg);
+            mainCam.transform.position = Vector3.Lerp(focusPoint, roomCamPosition.position, timeProg);
+            yield return new WaitForFixedUpdate();
+        }
+
+        isInPuzzle = 
+        shouldBeFocused = false;
+
+    }
+
+    bool CanMove()
+    {
+        return (canMoveOnTransition && !isInPuzzle);
+    }
+
+    bool isSprint() => Input.GetKey(KeyCode.LeftShift) || sprint;
 
     IEnumerator lerpCamera(Transform t, bool isHall)
     {
@@ -193,23 +265,35 @@ public class charCont : MonoBehaviour
 
     void Update()
     {
-        float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed; //Sprinting
-        anim.speed = Input.GetKey(KeyCode.LeftShift) ? 2 : 1.2f;
+
+        
+
+        float speed = isSprint() ? runSpeed : walkSpeed; //Sprinting
+        anim.speed = isSprint() ? 2 : 1.2f;
 
         if (airStrafing || cc.isGrounded) mvX = mvZ = mvY = 0;
 
-        if (Input.GetKeyDown(KeyCode.Space) && cc.isGrounded) mvY = jumpForce; //Jumping
+        if (Input.GetKeyDown(KeyCode.Space)) setJump = true;
+
+        if (setJump && cc.isGrounded) mvY = jumpForce; //Jumping
+        setJump = false;
 
         //Movement
         float zSpeed = walkDirection.z * speed;
         float xSpeed = walkDirection.x * speed;
 
-        if ((cc.isGrounded || airStrafing) && canMoveOnTransition)
+        if ((cc.isGrounded || airStrafing) && CanMove())
         {
             if (Input.GetKey(KeyCode.W)) mvZ -= zSpeed; //Forwards
             if (Input.GetKey(KeyCode.S)) mvZ += zSpeed; //Back
             if (Input.GetKey(KeyCode.D)) mvX -= xSpeed; //Right
             if (Input.GetKey(KeyCode.A)) mvX += xSpeed; //Left
+        }
+
+        if(controllermover != Vector2.zero)
+        {
+            mvX = -controllermover.x * speed;
+            mvZ = -controllermover.y * speed;
         }
 
         //Handling Gravity
@@ -222,7 +306,6 @@ public class charCont : MonoBehaviour
         Direction = (int)((mvX / speed) * 10 + (mvZ / speed));
 
         cc.Move(moveDir * Time.deltaTime);
-
     }
 
     IEnumerator MakeLerp(Quaternion one, Quaternion two, float time)

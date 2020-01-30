@@ -4,33 +4,53 @@ using UnityEngine;
 
 public class Minigame_puzzle : MonoBehaviour
 {
-
     public string hashString;
     public string checkString;
     public int length;
     public int counter;
 
-    private int addCurrent;
+    private int[] addCurrent;
 
     bool canAdd;
 
     //public GameObject[] showSprites;
-    private Texture2D[] showSprites;
-    AudioSource aud;
+    private static Texture2D[] showSprites;
+    public static AudioClip[] clips;
+    private AudioSource aud;
 
+    void SetAll(int a) { for (int i = 0; i < 4; i++) { addCurrent[i] = a; } }
 
     void Start()
     {
-        Object[] sprites = Resources.LoadAll("Minigame_Sprites", typeof(Texture2D));
-        showSprites = new Texture2D[8];
-        int counter = 0;
-        foreach(Object a in sprites)
-        {
-            showSprites[counter] = (Texture2D)a;
-            counter++;
-        }
+        
 
-        addCurrent = 0;
+        if(clips == null)
+        {
+            Object[] sprites = Resources.LoadAll("Minigame_Sprites", typeof(Texture2D));
+            Object[] trumpet_sounds = Resources.LoadAll("Trumpet_Sounds", typeof(AudioClip));
+
+            showSprites = new Texture2D[8];
+            clips = new AudioClip[5];
+
+            int counter = 0;
+            foreach (Object a in sprites)
+            {
+                showSprites[counter] = (Texture2D)a;
+                counter++;
+            }
+
+            counter = 0;
+            foreach (Object x in trumpet_sounds)
+            {
+                clips[counter] = (AudioClip)x;
+                counter++;
+            }
+        }
+        
+
+
+        addCurrent = new int[4];
+        SetAll(0);
 
         //Randomization goes here
         StartCoroutine(EndAttempt(0.2f));
@@ -38,13 +58,14 @@ public class Minigame_puzzle : MonoBehaviour
 
 
 
-        addCurrent = 4;
+        SetAll(4);
     }
 
     void GameWin()
     {
         Debug.Log("You win");
         Destroy(this);
+        GetComponent<Key_Handler>().win();
     }
 
     void randomize()
@@ -65,24 +86,23 @@ public class Minigame_puzzle : MonoBehaviour
         checkString = "";
         randomize();
         canAdd = false;
+
         for (int j = 0; j < 4; j++)
         {
-            for (int k = 0; k < 4; k++)
-            {
-                addCurrent = 4;
-            }
+            SetAll(0);
             yield return new WaitForSeconds(0.1f);
-            for (int k = 0; k < 4; k++)
-            {
-                addCurrent = 0;
-            }
+            SetAll(4);
             yield return new WaitForSeconds(0.1f);
         }
         for (int i = 0; i < hashString.Length; i++)
         {
-            addCurrent = 0;
-            yield return new WaitForSeconds(time);
-            addCurrent = 4;
+            if (Input.GetKey(KeyCode.Return)) break;
+            int index = int.Parse(hashString[i].ToString()) - 1;
+            addCurrent[index] = 0;
+            aud.clip = clips[index];
+            aud.Play();
+            yield return new WaitForSeconds(aud.clip.length);
+            addCurrent[index] = 4;
             yield return new WaitForSeconds(time);
         }
 
@@ -91,14 +111,16 @@ public class Minigame_puzzle : MonoBehaviour
 
     IEnumerator makeGlow(int select)
     {
-        addCurrent = 0;
+        addCurrent[select-1] = 0;
         yield return new WaitForSeconds(0.2f);
-        addCurrent = 4;
+        addCurrent[select-1] = 4;
 
     }
 
     void addString(int add)
     {
+        aud.clip = clips[add - 1];
+        aud.Play();
         checkString += add;
         counter++;
         StartCoroutine(makeGlow(add));
@@ -108,17 +130,20 @@ public class Minigame_puzzle : MonoBehaviour
     {
         if (count >= 0)
             if (hashString[count] != checkString[count]) return true;
+            
         return false;
     }
 
     private void OnGUI()
     {
-        GUI.DrawTexture(new Rect(Screen.width/2,Screen.height-Screen.height*0.8f,Screen.width/10,Screen.height/5), showSprites[0+addCurrent], ScaleMode.ScaleToFit);
+        GUI.DrawTexture(new Rect(Screen.width / 2 - Screen.width / 6, -5, Screen.width / 3, Screen.height / 2), showSprites[3 + addCurrent[3]], ScaleMode.ScaleToFit); // UP
+        GUI.DrawTexture(new Rect(Screen.width / 3 - Screen.width / 6, Screen.height * 0.4f, Screen.width / 3, Screen.height / 2), showSprites[0 + addCurrent[0]], ScaleMode.ScaleToFit);  // LEFT
+        GUI.DrawTexture(new Rect(Screen.width - Screen.width / 3 - Screen.width / 6, Screen.height * 0.4f, Screen.width / 3, Screen.height / 2), showSprites[2 + addCurrent[2]], ScaleMode.ScaleToFit); // RIGHT
+        GUI.DrawTexture(new Rect(Screen.width / 2 - Screen.width / 6, Screen.height * 0.4f, Screen.width / 3, Screen.height / 2), showSprites[1 + addCurrent[1]], ScaleMode.ScaleToFit); //DOWN
     }
 
     void Update()
     {
-
 
         if (canAdd)
         {
@@ -134,6 +159,8 @@ public class Minigame_puzzle : MonoBehaviour
                 GameWin();
 
             StartCoroutine(EndAttempt(0.2f));
+            aud.clip = clips[4];
+            aud.Play();
 
         }
 

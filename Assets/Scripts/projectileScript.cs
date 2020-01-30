@@ -53,6 +53,8 @@ public class projectileScript : MonoBehaviour
 
     private void Start()
     {
+
+        if (pickupAble) mainScript.controls.Controller.Interact.started += e => PickUp();
         mc = Camera.main;
         beginTime = Time.time;
         glow = transform.GetChild(1).GetComponent<Light>();
@@ -68,17 +70,23 @@ public class projectileScript : MonoBehaviour
             StartCoroutine(fadeOut());
         }
 
-        if(pickupAble && Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E)) PickUp();
+
+    }
+
+    void PickUp()
+    {
+        if (pickupAble)
         {
             if (Vector3.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) < 5)
             {
                 PlayerState.Ammo++;
+                mainScript.controls.Controller.Interact.started -= e => PickUp();
                 Destroy(gameObject);
             }
         }
-
-
     }
+
 
     private bool isWall(Collision col)
     {

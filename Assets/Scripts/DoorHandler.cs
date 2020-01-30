@@ -6,11 +6,30 @@ public class DoorHandler : MonoBehaviour
 {
 
     public bool locked;
+    public int bossDesignation;
 
     public bool Open { get; set; }
     private Animator anim;
 
-    void Start() => anim = GetComponent<Animator>();
+    void checkLockStatus(int disRegard)
+    {
+        if(bossDesignation > 0)
+        {
+            Debug.Log($"{PlayerState.Keys[bossDesignation - 1]} is the value of the key slot");
+            if (PlayerState.Keys[bossDesignation - 1] >= 2)
+            {
+                locked = false;
+            }
+        }
+        
+    }
+
+    void Start()
+    {
+        bossDesignation++;
+        anim = GetComponent<Animator>();
+        Key_Handler.update += checkLockStatus;
+    }
 
     public void OpenCloseDoor()
     {

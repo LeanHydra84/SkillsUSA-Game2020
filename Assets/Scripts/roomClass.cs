@@ -9,6 +9,9 @@ public class roomClass : MonoBehaviour
     public Transform roomCam;
     public Vector4 md;
 
+    public int Boss_State;
+
+
     public GameObject[] assets;
     
     public MeshRenderer[] GetRenderers()
