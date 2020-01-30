@@ -26,9 +26,11 @@ public class DialogScript : MonoBehaviour
     private Texture2D background;
     float startTime;
     float showTime;
+    private bool skip;
 
     void Start()
     {
+        mainScript.controls.Controller.ShootFlashlight.started += ctx => skip = false;
         Color selectColor = new Color(0, 0, 0, 0.5f);
         background = new Texture2D(1, 1);
         background.SetPixel(0, 0, selectColor);
@@ -53,7 +55,8 @@ public class DialogScript : MonoBehaviour
 
     private void Update()
     {
-        if (CanRun == 2 && Input.GetKeyDown(KeyCode.Mouse0))
+        if(Input.GetKeyDown(KeyCode.Mouse0)) skip = true;
+        if (CanRun == 2 && skip)
         {
             lineReader++;
             characterReader = 0;
@@ -64,6 +67,7 @@ public class DialogScript : MonoBehaviour
                 startTime = Time.time;
             }
         }
+        skip = false;
     }
 
     void ShowHideBanner(divCheck dc, int mult)
