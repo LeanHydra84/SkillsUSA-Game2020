@@ -9728,6 +9728,7 @@ GameObject:
   - component: {fileID: 1219960247}
   - component: {fileID: 1219960249}
   - component: {fileID: 1219960248}
+  - component: {fileID: 1219960250}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1060 (1)
   m_TagString: Untagged
@@ -9795,6 +9796,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1219960246}
   m_Mesh: {fileID: -4544392603894345482, guid: f0371b9cdac867043aae2499b29da258, type: 3}
+--- !u!64 &1219960250
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1219960246}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -4544392603894345482, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!64 &1227588099
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -9820,6 +9835,7 @@ GameObject:
   - component: {fileID: 1240266623}
   - component: {fileID: 1240266625}
   - component: {fileID: 1240266624}
+  - component: {fileID: 1240266626}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1024 (1)
   m_TagString: Untagged
@@ -9889,6 +9905,20 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1240266622}
+  m_Mesh: {fileID: -1029966237722876102, guid: f0371b9cdac867043aae2499b29da258, type: 3}
+--- !u!64 &1240266626
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240266622}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
   m_Mesh: {fileID: -1029966237722876102, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!64 &1248872028
 MeshCollider:
@@ -16901,6 +16931,7 @@ GameObject:
   - component: {fileID: 3250310740448783655}
   - component: {fileID: 7367219885184431939}
   - component: {fileID: 4267231000931472830}
+  - component: {fileID: 878391337886791224}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.596
   m_TagString: Untagged
@@ -16908,6 +16939,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &878391337886791224
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 878391337886791223}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -2972395893095927989, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!23 &881299490833079361
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18972,6 +19017,7 @@ GameObject:
   - component: {fileID: 9026980807697769585}
   - component: {fileID: 7467650644457260096}
   - component: {fileID: 3537656770654012129}
+  - component: {fileID: 1615586272700482328}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.924
   m_TagString: Untagged
@@ -18979,6 +19025,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &1615586272700482328
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615586272700482327}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -1796193408417225873, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!33 &1635507400612830485
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -19478,6 +19538,7 @@ GameObject:
   - component: {fileID: 8655067005920028900}
   - component: {fileID: 5756293921035504616}
   - component: {fileID: 2158196906609138339}
+  - component: {fileID: 1826045304261151765}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.669
   m_TagString: Untagged
@@ -19485,6 +19546,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &1826045304261151765
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826045304261151764}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -5364824670152144022, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!4 &1837525194446349617
 Transform:
   m_ObjectHideFlags: 0
@@ -21797,6 +21872,7 @@ GameObject:
   - component: {fileID: 1977417285438457816}
   - component: {fileID: 4779883149222792942}
   - component: {fileID: 5830588338529943428}
+  - component: {fileID: 2257295697930892113}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1150
   m_TagString: Untagged
@@ -21804,6 +21880,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &2257295697930892113
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2257295697930892112}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 3300427832089405809, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!4 &2262115801407080215
 Transform:
   m_ObjectHideFlags: 0
@@ -22071,6 +22161,7 @@ GameObject:
   - component: {fileID: 4476457356129175011}
   - component: {fileID: 2700851886155364409}
   - component: {fileID: 901814212107535005}
+  - component: {fileID: 2326835344658659227}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.931
   m_TagString: Untagged
@@ -22078,6 +22169,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &2326835344658659227
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2326835344658659226}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -7971511469647716159, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!33 &2347232946502643518
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -22126,6 +22231,7 @@ GameObject:
   - component: {fileID: 2864949110183603240}
   - component: {fileID: 8486769585768688001}
   - component: {fileID: 7378043694728593509}
+  - component: {fileID: 2403597477933993043}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1061
   m_TagString: Untagged
@@ -22133,6 +22239,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &2403597477933993043
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2403597477933993042}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 1740351086749423616, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!1 &2404178233278493422 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3947560470258979632, guid: 7d9c55e9c23e8214da37fa35c2c66b22,
@@ -22594,6 +22714,7 @@ GameObject:
   - component: {fileID: 6250388827358233972}
   - component: {fileID: 2618755800485777475}
   - component: {fileID: 2727600878682659605}
+  - component: {fileID: 2719536595937346001}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.338
   m_TagString: Untagged
@@ -22601,6 +22722,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &2719536595937346001
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2719536595937346000}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 69764600865105600, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!23 &2727600878682659605
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -23276,6 +23411,7 @@ GameObject:
   - component: {fileID: 3009944196138624745}
   - component: {fileID: 1895667167975475601}
   - component: {fileID: 7144925517672879588}
+  - component: {fileID: 3153176696579349833}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.906
   m_TagString: Untagged
@@ -23283,6 +23419,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &3153176696579349833
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3153176696579349832}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -6718765242080271591, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!33 &3208171048296254198
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -23635,6 +23785,7 @@ GameObject:
   - component: {fileID: 1837525194446349617}
   - component: {fileID: 1635507400612830485}
   - component: {fileID: 6150717331311466725}
+  - component: {fileID: 3423723670533697894}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.735
   m_TagString: Untagged
@@ -23642,6 +23793,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &3423723670533697894
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3423723670533697893}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 4554258495801600605, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!33 &3427662472949200816
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -23946,6 +24111,7 @@ GameObject:
   - component: {fileID: 4980359599747021627}
   - component: {fileID: 4972981479857913122}
   - component: {fileID: 2606845927545205017}
+  - component: {fileID: 3533383020206922223}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.681
   m_TagString: Untagged
@@ -23953,6 +24119,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &3533383020206922223
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3533383020206922222}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -2419012173890108757, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!33 &3534886263061012816
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -24088,6 +24268,7 @@ GameObject:
   - component: {fileID: 3795941415719756308}
   - component: {fileID: 8323578175174604658}
   - component: {fileID: 1516125232160679079}
+  - component: {fileID: 3565771137511935793}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1165
   m_TagString: Untagged
@@ -24095,6 +24276,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &3565771137511935793
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3565771137511935792}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -8282097205935783698, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!23 &3572966524580593810
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -24258,6 +24453,7 @@ GameObject:
   - component: {fileID: 6923697534140591833}
   - component: {fileID: 8095750093729690010}
   - component: {fileID: 701729385755345608}
+  - component: {fileID: 3676375774144144824}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.675
   m_TagString: Untagged
@@ -24265,6 +24461,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &3676375774144144824
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3676375774144144823}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -2722493948146570538, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!4 &3679765371380025480
 Transform:
   m_ObjectHideFlags: 0
@@ -25036,6 +25246,7 @@ GameObject:
   - component: {fileID: 6741962678887335142}
   - component: {fileID: 1577396476133937564}
   - component: {fileID: 150575321757239141}
+  - component: {fileID: 3874460832572308878}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.941
   m_TagString: Untagged
@@ -25043,6 +25254,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &3874460832572308878
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3874460832572308877}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -2705360257295184479, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!33 &3875507730722161044
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -25062,6 +25287,7 @@ GameObject:
   - component: {fileID: 5958235557737984301}
   - component: {fileID: 8511420111768127489}
   - component: {fileID: 8081384842829926941}
+  - component: {fileID: 3881964403084676490}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1026
   m_TagString: Untagged
@@ -25069,6 +25295,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &3881964403084676490
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3881964403084676489}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 7835623355604024924, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!33 &3890786176463652913
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -26128,6 +26368,7 @@ GameObject:
   - component: {fileID: 5071883441559028667}
   - component: {fileID: 1118267548099834377}
   - component: {fileID: 874876545000566981}
+  - component: {fileID: 4450956876570508704}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1176
   m_TagString: Untagged
@@ -26135,6 +26376,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &4450956876570508704
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4450956876570508703}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -5103170387233862058, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!23 &4456407382996760451
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -26202,6 +26457,7 @@ GameObject:
   - component: {fileID: 6707948516284404363}
   - component: {fileID: 630596544376169564}
   - component: {fileID: 6316544120765070241}
+  - component: {fileID: 4500023897188899334}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.832
   m_TagString: Untagged
@@ -26209,6 +26465,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &4500023897188899334
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4500023897188899333}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -6144486094820133980, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!4 &4504313765359313303
 Transform:
   m_ObjectHideFlags: 0
@@ -27319,6 +27589,7 @@ GameObject:
   - component: {fileID: 7680360723749741180}
   - component: {fileID: 1020741925175275074}
   - component: {fileID: 3482040990764808092}
+  - component: {fileID: 5280438186855556227}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1116
   m_TagString: Untagged
@@ -27326,6 +27597,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &5280438186855556227
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5280438186855556226}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -6918995151788393279, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!4 &5281515266854511078
 Transform:
   m_ObjectHideFlags: 0
@@ -27612,6 +27897,7 @@ GameObject:
   - component: {fileID: 1977078151770034023}
   - component: {fileID: 4371287314923806166}
   - component: {fileID: 408658658761778801}
+  - component: {fileID: 5452379802923695272}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.053
   m_TagString: Untagged
@@ -27619,6 +27905,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &5452379802923695272
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5452379802923695271}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 9070100539763346670, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!33 &5472744683086346727
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -28047,6 +28347,7 @@ GameObject:
   - component: {fileID: 8456083249292821047}
   - component: {fileID: 151868054856384845}
   - component: {fileID: 667361490923264853}
+  - component: {fileID: 5664832716548520013}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.055
   m_TagString: Untagged
@@ -28054,6 +28355,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &5664832716548520013
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5664832716548520012}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 8895092362230100470, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!23 &5711146574183377628
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -31007,6 +31322,7 @@ GameObject:
   - component: {fileID: 2183871954178857536}
   - component: {fileID: 3274305348520895141}
   - component: {fileID: 1513793019811662819}
+  - component: {fileID: 7021178061219434170}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1159
   m_TagString: Untagged
@@ -31014,6 +31330,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &7021178061219434170
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7021178061219434169}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -2161901154396940067, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!4 &7021209096549520740
 Transform:
   m_ObjectHideFlags: 0
@@ -31094,6 +31424,7 @@ GameObject:
   - component: {fileID: 7504049036939445734}
   - component: {fileID: 8262132129918526349}
   - component: {fileID: 6353938208206056598}
+  - component: {fileID: 7120056552751422395}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.920
   m_TagString: Untagged
@@ -31101,6 +31432,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &7120056552751422395
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7120056552751422394}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -6994405757533820205, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!1 &7122057740561796052
 GameObject:
   m_ObjectHideFlags: 0
@@ -31327,6 +31672,7 @@ GameObject:
   - component: {fileID: 4375545141404963214}
   - component: {fileID: 300048948958301068}
   - component: {fileID: 8632872651337915038}
+  - component: {fileID: 7219585504266845019}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1016
   m_TagString: Untagged
@@ -31334,6 +31680,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &7219585504266845019
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7219585504266845018}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 2334671050669729697, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!4 &7245766013263106012
 Transform:
   m_ObjectHideFlags: 0
@@ -31422,6 +31782,7 @@ GameObject:
   - component: {fileID: 3139816718139568676}
   - component: {fileID: 146542304112331926}
   - component: {fileID: 6994185551761341398}
+  - component: {fileID: 7323115069273296790}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.975
   m_TagString: Untagged
@@ -31429,6 +31790,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &7323115069273296790
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7323115069273296789}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -3351053871016262312, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!1 &7348843979097408631
 GameObject:
   m_ObjectHideFlags: 0
@@ -31440,6 +31815,7 @@ GameObject:
   - component: {fileID: 2262115801407080215}
   - component: {fileID: 9064181652254623813}
   - component: {fileID: 3572966524580593810}
+  - component: {fileID: 7348843979097408632}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1002
   m_TagString: Untagged
@@ -31447,6 +31823,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &7348843979097408632
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7348843979097408631}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 8194638979428881013, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!33 &7367219885184431939
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -31786,6 +32176,7 @@ GameObject:
   - component: {fileID: 1698327479370024781}
   - component: {fileID: 8405694295917100891}
   - component: {fileID: 881299490833079361}
+  - component: {fileID: 7552493857643115007}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1024
   m_TagString: Untagged
@@ -31793,6 +32184,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &7552493857643115007
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7552493857643115006}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -1029966237722876102, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!1 &7586593863939983101
 GameObject:
   m_ObjectHideFlags: 0
@@ -31822,6 +32227,7 @@ GameObject:
   - component: {fileID: 4143364171556631330}
   - component: {fileID: 5933782048847001134}
   - component: {fileID: 1289272542756692384}
+  - component: {fileID: 7601754671984186677}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.927
   m_TagString: Untagged
@@ -31829,6 +32235,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &7601754671984186677
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7601754671984186676}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -8499041061282898073, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!33 &7613009698612080428
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -32248,6 +32668,7 @@ GameObject:
   - component: {fileID: 2528912558215408212}
   - component: {fileID: 8406800127371672016}
   - component: {fileID: 8452579313463933125}
+  - component: {fileID: 7853030077380561407}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1078
   m_TagString: Untagged
@@ -32255,6 +32676,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &7853030077380561407
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7853030077380561406}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -2843689421337057824, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!33 &7855228681573748745
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -35938,6 +36373,7 @@ GameObject:
   - component: {fileID: 184740081299592952}
   - component: {fileID: 3404457932626954617}
   - component: {fileID: 5598116563038438157}
+  - component: {fileID: 8501538060880583533}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.998
   m_TagString: Untagged
@@ -35945,6 +36381,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &8501538060880583533
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8501538060880583532}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -8740624526322494824, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!1 &8506132323659455263
 GameObject:
   m_ObjectHideFlags: 0
@@ -38662,6 +39112,7 @@ GameObject:
   - component: {fileID: 2502968158906641855}
   - component: {fileID: 6011741510514856394}
   - component: {fileID: 4666108511740253908}
+  - component: {fileID: 9132747870212319424}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1122
   m_TagString: Untagged
@@ -38669,6 +39120,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &9132747870212319424
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9132747870212319423}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -8740094533992069906, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!1 &9136317563387273766
 GameObject:
   m_ObjectHideFlags: 0
@@ -38699,6 +39164,7 @@ GameObject:
   - component: {fileID: 4761144444176626638}
   - component: {fileID: 1343823664881256535}
   - component: {fileID: 1779825606247365300}
+  - component: {fileID: 9142315244149507114}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.1060
   m_TagString: Untagged
@@ -38706,6 +39172,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &9142315244149507114
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9142315244149507113}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -4544392603894345482, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!1 &9192161544648794123
 GameObject:
   m_ObjectHideFlags: 0
@@ -38717,6 +39197,7 @@ GameObject:
   - component: {fileID: 483965445036121931}
   - component: {fileID: 1088295287691698869}
   - component: {fileID: 2527616353173789738}
+  - component: {fileID: 9192161544648794124}
   m_Layer: 0
   m_Name: Obj_[Furniture]WardrobeV1.063
   m_TagString: Untagged
@@ -38724,6 +39205,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &9192161544648794124
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9192161544648794123}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: -5419374959655411215, guid: f0371b9cdac867043aae2499b29da258, type: 3}
 --- !u!23 &9195315694527720639
 MeshRenderer:
   m_ObjectHideFlags: 0
