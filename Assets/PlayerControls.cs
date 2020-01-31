@@ -73,6 +73,38 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MG_Left"",
+                    ""type"": ""Button"",
+                    ""id"": ""8a5ec73e-307f-4ab6-aca1-164ea26b26ba"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MG_Right"",
+                    ""type"": ""Button"",
+                    ""id"": ""43f17a9b-6bf5-445d-b42a-96a8fad3b3b5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MG_Down"",
+                    ""type"": ""Button"",
+                    ""id"": ""629a14c4-1f4b-49ce-b29f-4848bb337c8a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MG_Up"",
+                    ""type"": ""Button"",
+                    ""id"": ""06e14b8f-39ca-48bb-90fd-2db31dc53449"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -152,6 +184,50 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""QuitGame"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b1cab255-cce0-42dc-9ce4-bcefd2338d36"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MG_Left"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f505b7da-f290-4803-b477-9fd0bacda0d9"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MG_Right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f3b2b015-8f40-4edf-902c-a4481ff46425"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MG_Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5bee6221-6486-4266-b66a-b688f82429b9"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MG_Up"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -167,6 +243,10 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Controller_FlashlightAim = m_Controller.FindAction("Flashlight Aim", throwIfNotFound: true);
         m_Controller_Sprint = m_Controller.FindAction("Sprint", throwIfNotFound: true);
         m_Controller_QuitGame = m_Controller.FindAction("QuitGame", throwIfNotFound: true);
+        m_Controller_MG_Left = m_Controller.FindAction("MG_Left", throwIfNotFound: true);
+        m_Controller_MG_Right = m_Controller.FindAction("MG_Right", throwIfNotFound: true);
+        m_Controller_MG_Down = m_Controller.FindAction("MG_Down", throwIfNotFound: true);
+        m_Controller_MG_Up = m_Controller.FindAction("MG_Up", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -223,6 +303,10 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Controller_FlashlightAim;
     private readonly InputAction m_Controller_Sprint;
     private readonly InputAction m_Controller_QuitGame;
+    private readonly InputAction m_Controller_MG_Left;
+    private readonly InputAction m_Controller_MG_Right;
+    private readonly InputAction m_Controller_MG_Down;
+    private readonly InputAction m_Controller_MG_Up;
     public struct ControllerActions
     {
         private @PlayerControls m_Wrapper;
@@ -234,6 +318,10 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @FlashlightAim => m_Wrapper.m_Controller_FlashlightAim;
         public InputAction @Sprint => m_Wrapper.m_Controller_Sprint;
         public InputAction @QuitGame => m_Wrapper.m_Controller_QuitGame;
+        public InputAction @MG_Left => m_Wrapper.m_Controller_MG_Left;
+        public InputAction @MG_Right => m_Wrapper.m_Controller_MG_Right;
+        public InputAction @MG_Down => m_Wrapper.m_Controller_MG_Down;
+        public InputAction @MG_Up => m_Wrapper.m_Controller_MG_Up;
         public InputActionMap Get() { return m_Wrapper.m_Controller; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -264,6 +352,18 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @QuitGame.started -= m_Wrapper.m_ControllerActionsCallbackInterface.OnQuitGame;
                 @QuitGame.performed -= m_Wrapper.m_ControllerActionsCallbackInterface.OnQuitGame;
                 @QuitGame.canceled -= m_Wrapper.m_ControllerActionsCallbackInterface.OnQuitGame;
+                @MG_Left.started -= m_Wrapper.m_ControllerActionsCallbackInterface.OnMG_Left;
+                @MG_Left.performed -= m_Wrapper.m_ControllerActionsCallbackInterface.OnMG_Left;
+                @MG_Left.canceled -= m_Wrapper.m_ControllerActionsCallbackInterface.OnMG_Left;
+                @MG_Right.started -= m_Wrapper.m_ControllerActionsCallbackInterface.OnMG_Right;
+                @MG_Right.performed -= m_Wrapper.m_ControllerActionsCallbackInterface.OnMG_Right;
+                @MG_Right.canceled -= m_Wrapper.m_ControllerActionsCallbackInterface.OnMG_Right;
+                @MG_Down.started -= m_Wrapper.m_ControllerActionsCallbackInterface.OnMG_Down;
+                @MG_Down.performed -= m_Wrapper.m_ControllerActionsCallbackInterface.OnMG_Down;
+                @MG_Down.canceled -= m_Wrapper.m_ControllerActionsCallbackInterface.OnMG_Down;
+                @MG_Up.started -= m_Wrapper.m_ControllerActionsCallbackInterface.OnMG_Up;
+                @MG_Up.performed -= m_Wrapper.m_ControllerActionsCallbackInterface.OnMG_Up;
+                @MG_Up.canceled -= m_Wrapper.m_ControllerActionsCallbackInterface.OnMG_Up;
             }
             m_Wrapper.m_ControllerActionsCallbackInterface = instance;
             if (instance != null)
@@ -289,6 +389,18 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @QuitGame.started += instance.OnQuitGame;
                 @QuitGame.performed += instance.OnQuitGame;
                 @QuitGame.canceled += instance.OnQuitGame;
+                @MG_Left.started += instance.OnMG_Left;
+                @MG_Left.performed += instance.OnMG_Left;
+                @MG_Left.canceled += instance.OnMG_Left;
+                @MG_Right.started += instance.OnMG_Right;
+                @MG_Right.performed += instance.OnMG_Right;
+                @MG_Right.canceled += instance.OnMG_Right;
+                @MG_Down.started += instance.OnMG_Down;
+                @MG_Down.performed += instance.OnMG_Down;
+                @MG_Down.canceled += instance.OnMG_Down;
+                @MG_Up.started += instance.OnMG_Up;
+                @MG_Up.performed += instance.OnMG_Up;
+                @MG_Up.canceled += instance.OnMG_Up;
             }
         }
     }
@@ -302,5 +414,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnFlashlightAim(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnQuitGame(InputAction.CallbackContext context);
+        void OnMG_Left(InputAction.CallbackContext context);
+        void OnMG_Right(InputAction.CallbackContext context);
+        void OnMG_Down(InputAction.CallbackContext context);
+        void OnMG_Up(InputAction.CallbackContext context);
     }
 }

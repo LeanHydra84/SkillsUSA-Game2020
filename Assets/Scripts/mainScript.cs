@@ -8,6 +8,7 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Switch;
 
 public static class PlayerState
 {
@@ -166,7 +167,7 @@ public class mainScript : MonoBehaviour
     public static mainScript instance;
     private static List<GameObject> AllRooms;
     Dictionary<string, Rect> rectPositions = new Dictionary<string, Rect>();
-    DialogScript dg;
+    public static DialogScript dg;
     GUIStyle style;
 
     private void GetAllMapObjects()
@@ -218,6 +219,7 @@ public class mainScript : MonoBehaviour
         dg = gameObject.AddComponent<DialogScript>();
         fadeBlack = charCont.mainCam.transform.GetChild(0).GetChild(0).GetComponent<Image>();
         fadeBlack.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
+        fadeBlack.GetComponent<Animator>().Play("ScreenFadeIn");
         //Debug.Log(Screen.width + " x " + Screen.height + ", " + Screen.dpi);
         Debug.Log($"{Screen.width} x {Screen.height}, at {Screen.dpi} dpi");
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
@@ -287,7 +289,6 @@ public class mainScript : MonoBehaviour
 
     void OnGUI()
     {
-        Debug.Log(flashDirection);
         //Draw Health
         GUI.DrawTexture(rectPositions["Heart"], heart[PlayerState.Health], ScaleMode.ScaleToFit, true);
 

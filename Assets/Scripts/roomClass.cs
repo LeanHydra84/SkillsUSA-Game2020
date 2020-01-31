@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class roomClass : MonoBehaviour
 {
+    
+    
+
     public bool isHallway;
     public string roomName = "";
     public Transform roomCam;
@@ -24,6 +27,8 @@ public class roomClass : MonoBehaviour
 		return R;
 		
     }
+
+
 
     public Material[] GetMaterials()
     {

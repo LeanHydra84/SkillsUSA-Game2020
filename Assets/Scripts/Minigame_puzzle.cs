@@ -22,7 +22,11 @@ public class Minigame_puzzle : MonoBehaviour
 
     void Start()
     {
-        
+
+        mainScript.controls.Controller.MG_Up.started += ctx => addString(4);
+        mainScript.controls.Controller.MG_Down.started += ctx => addString(2);
+        mainScript.controls.Controller.MG_Left.started += ctx => addString(1);
+        mainScript.controls.Controller.MG_Right.started += ctx => addString(3);
 
         if(clips == null)
         {

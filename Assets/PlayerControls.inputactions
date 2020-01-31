@@ -60,6 +60,38 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "MG_Left",
+                    "type": "Button",
+                    "id": "8a5ec73e-307f-4ab6-aca1-164ea26b26ba",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "MG_Right",
+                    "type": "Button",
+                    "id": "43f17a9b-6bf5-445d-b42a-96a8fad3b3b5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "MG_Down",
+                    "type": "Button",
+                    "id": "629a14c4-1f4b-49ce-b29f-4848bb337c8a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "MG_Up",
+                    "type": "Button",
+                    "id": "06e14b8f-39ca-48bb-90fd-2db31dc53449",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -137,6 +169,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "QuitGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b1cab255-cce0-42dc-9ce4-bcefd2338d36",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MG_Left",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f505b7da-f290-4803-b477-9fd0bacda0d9",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MG_Right",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f3b2b015-8f40-4edf-902c-a4481ff46425",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MG_Down",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5bee6221-6486-4266-b66a-b688f82429b9",
+                    "path": "<Gamepad>/dpad/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MG_Up",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

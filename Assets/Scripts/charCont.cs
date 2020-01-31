@@ -40,6 +40,7 @@ public class charCont : MonoBehaviour
     public static Camera mainCam;
     private Camera moveableCamera;
     private CharacterController cc;
+    public static Vector3 startingPoint = new Vector3(0f, 3.579f, -1.23f);
 
     //Vector Creation
     Vector3 moveDir = Vector3.zero;
@@ -162,7 +163,8 @@ public class charCont : MonoBehaviour
             "\nPLAYER_ISRUNNING = " + Input.GetKey(KeyCode.LeftShift).ToString().ToUpper() +
             "\nPLAYER_ISGROUNDED = " + cc.isGrounded.ToString().ToUpper() +
             "\nMOVE_VECTOR = " + moveDir +
-            "\nTIME = " + PlayerState.Seconds;
+            "\nTIME = " + PlayerState.Seconds + 
+            "\nFramerate = " + 1.0f / Time.deltaTime;
             GUI.skin.textArea.active.background =
             GUI.skin.textArea.normal.background =
             GUI.skin.textArea.onHover.background =
