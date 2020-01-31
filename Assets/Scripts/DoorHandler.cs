@@ -15,8 +15,9 @@ public class DoorHandler : MonoBehaviour
     {
         if(bossDesignation > 0)
         {
-            Debug.Log($"{PlayerState.Keys[bossDesignation - 1]} is the value of the key slot");
-            if (PlayerState.Keys[bossDesignation - 1] >= 2)
+            Debug.Log(bossDesignation);
+            Debug.Log($"{PlayerState.Keys[bossDesignation - 2]} is the value of the key slot");
+            if (PlayerState.Keys[bossDesignation - 2] >= 2)
             {
                 locked = false;
             }

@@ -57,7 +57,11 @@ public class Bullet
 public class bossFight : MonoBehaviour
 {
     private int bossHealth;
-    
+
+    public static string fightName;
+
+    public GameObject[] nameNumber;
+
     public float BPM;
     private bool isPlaying;
     private AudioSource music_player;
@@ -70,6 +74,8 @@ public class bossFight : MonoBehaviour
     public Rigidbody projE;
     public static Rigidbody projectile;
     public Transform firePoint;
+
+    private GameObject findRight;
 
     string[] lines;
     public static int[] anglesX;
@@ -102,17 +108,25 @@ public class bossFight : MonoBehaviour
 
     void Start()
     {
+        
+        player = GameObject.FindWithTag("Player").transform;
         music_player = GetComponent<AudioSource>();
         projectile = projE;
-        var patt = Resources.Load<TextAsset>(@"Songs/Bassoon_BossF");
+    }
+
+    public void Initialize()
+    {
+        foreach (GameObject x in nameNumber) x.SetActive(false);
+        findRight = transform.Find(fightName).gameObject;
+        findRight.SetActive(true);
+        music_player.clip = (AudioClip)Resources.Load("Audio/Music/" + fightName, typeof(AudioClip));
+        var patt = Resources.Load<TextAsset>(@"Songs/"+fightName);
         isPlaying = true;
         lines = Regex.Split(patt.text, "\r\n ?|\n");
-        foreach (string a in lines) Debug.Log(a);
-        player = GameObject.FindWithTag("Player").transform;
         StartCoroutine(IterateFile());
         anglesX = GetAngles();
         fire_speed = 15;
-        bossHealth = 8;
+        bossHealth = 4;
     }
 
     Texture2D pf(string s)
@@ -221,7 +235,7 @@ public class bossFight : MonoBehaviour
 
     IEnumerator deathFade()
     {
-        SpriteRenderer spr = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        SpriteRenderer spr =findRight.GetComponent<SpriteRenderer>();
         float opacity = 1f;
         while (opacity > 0)
         {
@@ -230,6 +244,9 @@ public class bossFight : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         System.GC.Collect();
+        PlayerState.IsInBossFight = false;
+        //StartCoroutine(mainScript.instance.teleportToBoss(mainScript.startingPos));
+        mainScript.instance.FinishedBoss();
         Destroy(gameObject);
     }
 
@@ -238,6 +255,9 @@ public class bossFight : MonoBehaviour
         BPM = float.Parse(lines[0]);
         float multiplier = 1 / (BPM / 60);
         Debug.Log("BPM: " + BPM);
+
+        yield return new WaitForSeconds(5.0f);
+
         while (isPlaying)
         {
             music_player.Play();

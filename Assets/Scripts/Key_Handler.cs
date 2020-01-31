@@ -19,7 +19,7 @@ public class Key_Handler : MonoBehaviour
         update += recalculateImages;
         spr = GetComponent<SpriteRenderer>();
 
-        bossNumber = PlayerState.Bosses[keyNumber];
+        bossNumber = PlayerState.Bosses[keyNumber-1];
         Debug.Log(bossNumber);
         if(KeySprites == null)
         {
@@ -49,7 +49,7 @@ public class Key_Handler : MonoBehaviour
 
     public void win()
     {
-        PlayerState.Keys[keyNumber]++;
+        PlayerState.Keys[keyNumber-1]++;
         charCont.shouldBeFocused = true;
         update(keyNumber);
         Destroy(gameObject);

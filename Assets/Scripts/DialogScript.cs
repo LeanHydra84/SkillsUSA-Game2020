@@ -23,6 +23,8 @@ public class DialogScript : MonoBehaviour
     private float divSize;
     private float additionConstant;
 
+    private string isBoss;
+
     private Texture2D background;
     float startTime;
     float showTime;
@@ -30,7 +32,7 @@ public class DialogScript : MonoBehaviour
 
     void Start()
     {
-        mainScript.controls.Controller.ShootFlashlight.started += ctx => skip = false;
+        mainScript.controls.Controller.ShootFlashlight.started += ctx => skip = true;
         Color selectColor = new Color(0, 0, 0, 0.5f);
         background = new Texture2D(1, 1);
         background.SetPixel(0, 0, selectColor);
@@ -39,10 +41,11 @@ public class DialogScript : MonoBehaviour
         //Constant calculated with: 1/72(point size) * 25(reference point amount) * 96(reference dpi) / 539 (reference resolution)
         myStyle.fontSize = (int)(100f / 1617f * Screen.height / Screen.dpi * 72);
         myStyle.fontStyle = FontStyle.Bold;
+        myStyle.normal.textColor = Color.white;
         myStyle.alignment = (TextAnchor)TextAlignment.Center;
     }
 
-    public void Initialize(string name, string text, bool forceRead)
+    public void Initialize(string name, string text, string ib)
     {
         lines = Regex.Split(text, "\r\n ?|\n");
         myName = name;
@@ -51,6 +54,7 @@ public class DialogScript : MonoBehaviour
         startTime = Time.time;
         divSize = 0;
         lineSoFar = "";
+        isBoss = ib;
     }
 
     private void Update()
@@ -121,6 +125,10 @@ public class DialogScript : MonoBehaviour
             characterReader = 0;
             lineSoFar = "";
             CanRun = 0;
+            if(isBoss != "")
+            {
+                mainScript.instance.StartBossFight(isBoss);
+            }
         }
 
 

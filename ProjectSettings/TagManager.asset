@@ -11,6 +11,8 @@ TagManager:
   - doorHandler
   - door
   - Puzzle
+  - bossHandler
+  - ghostDiag
   layers:
   - Default
   - TransparentFX

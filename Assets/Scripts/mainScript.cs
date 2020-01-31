@@ -41,7 +41,7 @@ public static class PlayerState
         seconds = 0;
         canLose = true;
         ammo = 0;
-        IsInBossFight = true; //SHOULD NOT BE TRUE
+        isInBossFight = false; //SHOULD NOT BE TRUE
 
         System.Random rnd = new System.Random();
         Bosses = Enumerable.Range(1, 4).OrderBy(r => rnd.Next()).ToArray();
@@ -54,7 +54,16 @@ public static class PlayerState
         set { if (value < 8) ammo = value; }
     }
 
-    public static bool IsInBossFight { get; set; }
+    private static bool isInBossFight;
+    public static bool IsInBossFight
+    {
+        get => isInBossFight;
+        set
+        {
+            isInBossFight = value;
+            mainScript.aud.enabled = !isInBossFight;
+        }
+    }
 
     public static int[] Bosses { get; }
 
@@ -133,6 +142,7 @@ public class mainScript : MonoBehaviour
 {
 
     public static PlayerControls controls;
+    public static AudioSource aud;
 
     //Misc
     private Light flashlight;
@@ -143,6 +153,10 @@ public class mainScript : MonoBehaviour
     private RaycastHit flashHit;
     public GUIStyle g;
     public Text lockText;
+    public Vector3 bossFightPos;
+    public static Vector3 startingPos;
+
+    public bossFight bf_instance;
 
     //Interaction Booleans
     private bool LeftClick;
@@ -191,7 +205,7 @@ public class mainScript : MonoBehaviour
     private void Awake()
     {
 		instance = this;
-
+        aud = GetComponent<AudioSource>();
         if (AllRooms == null)
             GetAllMapObjects();
 
@@ -210,8 +224,29 @@ public class mainScript : MonoBehaviour
             transform.position = new Vector3(PlayerState.x, PlayerState.y + 1, PlayerState.z);
         }
     }
-	
 
+    public void FinishedBoss()
+    {
+        StartCoroutine(teleportToBoss(startingPos));
+    }
+
+    public IEnumerator teleportToBoss(Vector3 tele)
+    {
+        fadeBlack.GetComponent<Animator>().Play("ScreenFadeOut");
+        yield return new WaitForSeconds(1.5f);
+        transform.position = tele;
+        yield return new WaitForSeconds(2.5f);
+        fadeBlack.GetComponent<Animator>().Play("ScreenFadeIn");
+    }
+
+    public void StartBossFight(string bossFight1)
+    {
+        PlayerState.IsInBossFight = true;
+        bossFight.fightName = bossFight1;
+        bf_instance.Initialize();
+        StartCoroutine(teleportToBoss(bossFightPos));
+        Debug.Log("Start Battle");
+    }
 
     void Start()
     {
@@ -238,6 +273,8 @@ public class mainScript : MonoBehaviour
         style.normal.textColor = Color.black;
         style.fontSize = (int)((100f / 1617f) * Screen.height / Screen.dpi * 72);
 
+        startingPos = transform.position + new Vector3(0, 1, 0);
+
         //Dictionary Rects:
         rectPositions.Add("Heart", new Rect(0, 0, Screen.width / 9.16f, Screen.width / 9.16f));
         rectPositions.Add("Ammo", new Rect(Screen.width / 128.26f, Screen.height - (Screen.height / 3.79f), Screen.width / 8.75f, Screen.width / 8.75f));
@@ -263,7 +300,6 @@ public class mainScript : MonoBehaviour
         foreach (GameObject k in RemoveList)
         {
             k.SetActive(false);
-            Debug.Log(k);
         }
             
     }
@@ -375,6 +411,18 @@ public class mainScript : MonoBehaviour
                 return;
             }
 
+            if(hit.tag == "ghostDiag")
+            {
+                GhostDialogHandler g = hit.gameObject.GetComponent<GhostDialogHandler>();
+                dg.Initialize(g.name, g.lines, "");
+                return;
+            }
+
+            if(hit.tag == "bossHandler")
+            {
+                hit.gameObject.GetComponent<BossHandler>().Interact();
+                return;
+            }
 
             if(hit.tag == "door")
             {
@@ -402,7 +450,7 @@ public class mainScript : MonoBehaviour
 
         }
 
-        if(Input.GetKeyDown(KeyCode.K)) dg.Initialize("GLADOS", "I think we can put our differences behind us\nFor science.\nYou monster.\nPlease place the Weighted Storage Cube on the Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button", false);
+        if(Input.GetKeyDown(KeyCode.K)) dg.Initialize("GLADOS", "I think we can put our differences behind us\nFor science.\nYou monster.\nPlease place the Weighted Storage Cube on the Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button", "");
 
         //Note firing / Flashlight toggle
         if (Input.GetKeyDown(KeyCode.Mouse0)) LeftClick = true;
