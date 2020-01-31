@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2208859768116815741}
   - component: {fileID: 7651631984907900436}
   - component: {fileID: 8549383095760287352}
+  - component: {fileID: 50961384616643213}
   m_Layer: 0
   m_Name: Obj_[Center]Stairs.DoorFrames
   m_TagString: Untagged
@@ -26,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 431657059603201849}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -8.358873, y: -1.440779, z: -3.1470995}
-  m_LocalScale: {x: 2.1798694, y: 1.1463637, z: 1.0060016}
+  m_LocalPosition: {x: -8.358873, y: -0.62591773, z: -3.1470997}
+  m_LocalScale: {x: 217.98694, y: 114.63639, z: 100.6002}
   m_Children: []
   m_Father: {fileID: 7982538666288123294}
   m_RootOrder: 0
@@ -39,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 431657059603201849}
-  m_Mesh: {fileID: 4987062781236612407, guid: 4b612676bf3402a45b2206580e7799c5, type: 3}
+  m_Mesh: {fileID: 4987062781236612407, guid: be0a8b119cc1cec48ab7db2872895d4e, type: 3}
 --- !u!23 &8549383095760287352
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -57,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 4482940116617062277, guid: 4b612676bf3402a45b2206580e7799c5, type: 3}
+  - {fileID: 2100000, guid: e121a13530024e24fb87f45400c712f5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -78,6 +79,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &50961384616643213
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431657059603201849}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 4987062781236612407, guid: be0a8b119cc1cec48ab7db2872895d4e, type: 3}
 --- !u!1 &1004504615394421008
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,7 +104,7 @@ GameObject:
   - component: {fileID: 1190105992435055148}
   - component: {fileID: 1601443790101373049}
   - component: {fileID: 8994113096088179804}
-  - component: {fileID: 1004504615394421007}
+  - component: {fileID: 8209890756609000347}
   m_Layer: 0
   m_Name: Obj_[Center]Stairs.Door
   m_TagString: door
@@ -105,8 +120,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1004504615394421008}
   m_LocalRotation: {x: 0.000000015454313, y: 0.70710677, z: -0.000000015454312, w: 0.7071068}
-  m_LocalPosition: {x: -8.358873, y: -1.4407787, z: -3.1470995}
-  m_LocalScale: {x: 0.0372334, y: 0.037330337, z: 0.042610545}
+  m_LocalPosition: {x: -8.358873, y: -0.62697744, z: -3.1470997}
+  m_LocalScale: {x: 3.72334, y: 3.73303, z: 4.2610497}
   m_Children: []
   m_Father: {fileID: 7982538666690830474}
   m_RootOrder: 0
@@ -118,7 +133,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1004504615394421008}
-  m_Mesh: {fileID: -7681921826445819453, guid: 4b612676bf3402a45b2206580e7799c5, type: 3}
+  m_Mesh: {fileID: -7681921826445819453, guid: be0a8b119cc1cec48ab7db2872895d4e, type: 3}
 --- !u!23 &8994113096088179804
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -136,8 +151,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2887486802978366413, guid: 4b612676bf3402a45b2206580e7799c5, type: 3}
-  - {fileID: 4316958176357565888, guid: 4b612676bf3402a45b2206580e7799c5, type: 3}
+  - {fileID: 2100000, guid: 93e68900308219e4d9b9630a5ae3583e, type: 2}
+  - {fileID: 2100000, guid: 6a80a11bb423c284bafc4a398f05ce62, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -158,7 +173,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &1004504615394421007
+--- !u!64 &8209890756609000347
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -169,9 +184,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
-  m_Mesh: {fileID: -7681921826445819453, guid: 4b612676bf3402a45b2206580e7799c5, type: 3}
+  m_Mesh: {fileID: -7681921826445819453, guid: be0a8b119cc1cec48ab7db2872895d4e, type: 3}
 --- !u!1 &7982538666288123295
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,7 +213,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7982538666288123295}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.996433, y: 1.440779, z: 3.3753843}
+  m_LocalPosition: {x: 8.686831, y: 2.775481e-18, z: -2.499931}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2208859768116815741}
@@ -237,6 +252,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d0963cf81f2d748b555a1a9879f0ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  locked: 0
+  bossDesignation: -1
 --- !u!1 &7982538666690830475
 GameObject:
   m_ObjectHideFlags: 0

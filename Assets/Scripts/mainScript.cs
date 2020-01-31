@@ -41,7 +41,7 @@ public static class PlayerState
         seconds = 0;
         canLose = true;
         ammo = 0;
-        IsInBossFight = false; //SHOULD NOT BE TRUE
+        IsInBossFight = true; //SHOULD NOT BE TRUE
 
         System.Random rnd = new System.Random();
         Bosses = Enumerable.Range(1, 4).OrderBy(r => rnd.Next()).ToArray();
@@ -192,8 +192,8 @@ public class mainScript : MonoBehaviour
     {
 		instance = this;
 
-        //if (AllRooms == null)
-        //GetAllMapObjects();
+        if (AllRooms == null)
+            GetAllMapObjects();
 
         controls = new PlayerControls();
         controls.Controller.Enable();

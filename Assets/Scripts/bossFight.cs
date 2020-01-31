@@ -104,7 +104,7 @@ public class bossFight : MonoBehaviour
     {
         music_player = GetComponent<AudioSource>();
         projectile = projE;
-        var patt = Resources.Load<TextAsset>(@"Songs/FileOut");
+        var patt = Resources.Load<TextAsset>(@"Songs/Bassoon_BossF");
         isPlaying = true;
         lines = Regex.Split(patt.text, "\r\n ?|\n");
         foreach (string a in lines) Debug.Log(a);

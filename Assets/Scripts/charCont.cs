@@ -185,14 +185,14 @@ public class charCont : MonoBehaviour
 
     public static bool ShouldFocus() { return shouldBeFocused; }
 
-    public static IEnumerator focusCamera(Vector3 focusPoint)
+    public static IEnumerator focusCamera(Vector3 input)
     {
         isInPuzzle = true;
         float StartTime = Time.time;
         float EndTime = 0.2f + StartTime;
         Vector3 startPoint = mainCam.transform.position;
-        focusPoint += new Vector3(0, 2, 2);
-        Quaternion toRotation = Quaternion.LookRotation(focusPoint - mainCam.transform.position);
+        Vector3 focusPoint = input + new Vector3(0, 2, 2);
+        Quaternion toRotation = Quaternion.LookRotation(input - focusPoint);
         Quaternion fromRotation = mainCam.transform.rotation;
 
         while (Time.time < EndTime)
@@ -292,7 +292,7 @@ public class charCont : MonoBehaviour
             if (Input.GetKey(KeyCode.A)) mvX += xSpeed; //Left
         }
 
-        if(controllermover != Vector2.zero)
+        if(controllermover != Vector2.zero && CanMove())
         {
             mvX = -controllermover.x * speed;
             mvZ = -controllermover.y * speed;
