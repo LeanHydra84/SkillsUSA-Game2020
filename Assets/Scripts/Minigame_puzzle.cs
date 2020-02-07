@@ -61,21 +61,22 @@ public class Minigame_puzzle : MonoBehaviour
         aud = GetComponent<AudioSource>();
 
 
-
         SetAll(4);
     }
 
-    void GameWin()
+    IEnumerator GameWin()
     {
         Debug.Log("You win");
-        Destroy(this);
+        yield return new WaitForSeconds(aud.clip.length);
+        mainScript.AllRooms.Remove(gameObject);
+        Destroy(gameObject);
         GetComponent<Key_Handler>().win();
     }
 
     void randomize()
     {
         hashString = "";
-        int rand = Random.Range(7, 10);
+        int rand = Random.Range(4, 5);
         for (int i = 0; i < rand; i++)
         {
             hashString += Random.Range(1, 5).ToString();
@@ -160,13 +161,18 @@ public class Minigame_puzzle : MonoBehaviour
         if (counter == length || doesConnect(counter - 1))
         {
             if (checkString == hashString)
-                GameWin();
-
-            StartCoroutine(EndAttempt(0.2f));
-            aud.clip = clips[4];
-            aud.Play();
+                StartCoroutine(GameWin());
+            else
+            {
+                StartCoroutine(EndAttempt(0.2f));
+                aud.clip = clips[4];
+                aud.Play();
+            }
+            
 
         }
+
+        
 
     }
 }

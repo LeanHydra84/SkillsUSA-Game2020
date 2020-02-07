@@ -55,6 +55,7 @@ public class DialogScript : MonoBehaviour
         divSize = 0;
         lineSoFar = "";
         isBoss = ib;
+        charCont.isInDialog = true;
     }
 
     private void Update()
@@ -127,8 +128,10 @@ public class DialogScript : MonoBehaviour
             CanRun = 0;
             if(isBoss != "")
             {
+                charCont.isInEndBossFight = true;
                 mainScript.instance.StartBossFight(isBoss);
             }
+            charCont.isInDialog = false;
         }
 
 

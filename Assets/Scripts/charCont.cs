@@ -17,6 +17,8 @@ public class charCont : MonoBehaviour
     private float runSpeed;
     const float gravity = 20f;
 
+
+
     private bool sprint;
     private Transform Mesh;
     private Animator anim;
@@ -26,10 +28,11 @@ public class charCont : MonoBehaviour
     private int turnDirection;
     private static Transform roomCamPosition;
     public static bool shouldBeFocused;
-
+    public static bool isInDialog;
+    public static bool isInEndBossFight;
 
     //Movement booleans
-    private static bool isInPuzzle;
+    public static bool isInPuzzle;
     private bool canMoveOnTransition;
 
     //Camera Values
@@ -137,7 +140,7 @@ public class charCont : MonoBehaviour
             if (Time.time > 1f && c1.GetComponent<roomClass>().isHallway) //Emables camera after exiting hallway, sets position to exiting position
             {
                 EnableCamera(mainCam);
-                mainCam.transform.position = c1.GetComponent<roomClass>().roomCam.transform.position;
+                //mainCam.transform.position = c1.GetComponent<roomClass>().roomCam.transform.position;
             }
             roomClass rc = other.gameObject.GetComponent<roomClass>();
             walkDirection = rc.md;
@@ -223,7 +226,7 @@ public class charCont : MonoBehaviour
 
     bool CanMove()
     {
-        return (canMoveOnTransition && !isInPuzzle);
+        return (canMoveOnTransition && !isInPuzzle && !isInDialog && !isInEndBossFight);
     }
 
     bool isSprint() => Input.GetKey(KeyCode.LeftShift) || sprint;
@@ -234,6 +237,8 @@ public class charCont : MonoBehaviour
         
         if (Time.time > 0.1f && camDirection != GetCamDirection(walkDirection)) canMoveOnTransition = false;
         camDirection = GetCamDirection(walkDirection);
+
+        //Vector3 mePosition = mainCam.transform.position;
 
         if (isHall)
         {
@@ -260,7 +265,7 @@ public class charCont : MonoBehaviour
                 yield return 0;
             }
             //yield return new WaitForSeconds(0.5f);
-            
+
         }
         canMoveOnTransition = true;
     }

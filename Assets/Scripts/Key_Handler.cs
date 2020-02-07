@@ -9,18 +9,19 @@ public class Key_Handler : MonoBehaviour
     public static updateSprite update;
     public int keyNumber;
     public int bossNumber { get; private set; }
+    public GameObject ambient_player;
 
     public static Sprite[] KeySprites;
     private SpriteRenderer spr;
+
+    private static GameObject player_character;
 
     void Start()
     {
         
         update += recalculateImages;
         spr = GetComponent<SpriteRenderer>();
-
         bossNumber = PlayerState.Bosses[keyNumber-1];
-        Debug.Log(bossNumber);
         if(KeySprites == null)
         {
             Object[] sprite_preload = Resources.LoadAll("Keys", typeof(Sprite));
@@ -32,7 +33,6 @@ public class Key_Handler : MonoBehaviour
         }
 
         spr.sprite = KeySprites[bossNumber * 2 - 2];
-
     }
     
     void recalculateImages(int des)
@@ -52,6 +52,7 @@ public class Key_Handler : MonoBehaviour
         PlayerState.Keys[keyNumber-1]++;
         charCont.shouldBeFocused = true;
         update(keyNumber);
+        Destroy(ambient_player);
         Destroy(gameObject);
     }
 

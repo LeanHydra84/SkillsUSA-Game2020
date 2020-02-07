@@ -25,6 +25,20 @@ public class DoorHandler : MonoBehaviour
         
     }
 
+    void OnEnable()
+    {
+        if(Open)
+        {
+            if(gameObject.name == "Single_Door")
+            {
+                anim.Play("StayOpenSingle");
+            }
+        else
+            anim.Play("StayOpen");
+        }
+
+    }
+
     void Start()
     {
         bossDesignation++;

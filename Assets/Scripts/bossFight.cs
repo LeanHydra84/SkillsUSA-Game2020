@@ -227,9 +227,11 @@ public class bossFight : MonoBehaviour
 
     void Death()
     {
+        charCont.isInEndBossFight = true;
         Debug.Log("Death method called");
         isPlaying = false;
         music_player.Stop();
+        mainScript.instance.DisableBossFigure(fightName);
         StartCoroutine(deathFade());
     }
 
@@ -247,7 +249,6 @@ public class bossFight : MonoBehaviour
         PlayerState.IsInBossFight = false;
         //StartCoroutine(mainScript.instance.teleportToBoss(mainScript.startingPos));
         mainScript.instance.FinishedBoss();
-        Destroy(gameObject);
     }
 
     IEnumerator IterateFile()

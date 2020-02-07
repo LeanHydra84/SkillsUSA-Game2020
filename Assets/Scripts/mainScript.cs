@@ -156,7 +156,7 @@ public class mainScript : MonoBehaviour
     public Vector3 bossFightPos;
     public static Vector3 startingPos;
 
-    public bossFight bf_instance;
+    public static bossFight bf_instance;
 
     //Interaction Booleans
     private bool LeftClick;
@@ -179,14 +179,26 @@ public class mainScript : MonoBehaviour
     //Array of lights for the mask
     public Light[] lightArray;
     public static mainScript instance;
-    private static List<GameObject> AllRooms;
+    public static List<GameObject> AllRooms;
     Dictionary<string, Rect> rectPositions = new Dictionary<string, Rect>();
     public static DialogScript dg;
     GUIStyle style;
 
+    public static GameObject[] handler_bosses;
+
     private void GetAllMapObjects()
     {
         GameObject map_parent = GameObject.Find("TheMap");
+        handler_bosses = new GameObject[4];
+
+        //Getting boss handlers
+        for (int i = 0; i < 4; i++)
+        {
+            handler_bosses[i] = map_parent.transform.GetChild(i).gameObject;
+        }
+        
+
+
         AllRooms = new List<GameObject>();
         for (int i = 0; i < map_parent.transform.childCount; i++)
         {
@@ -228,6 +240,7 @@ public class mainScript : MonoBehaviour
     public void FinishedBoss()
     {
         StartCoroutine(teleportToBoss(startingPos));
+        PlayerState.Health = 4;
     }
 
     public IEnumerator teleportToBoss(Vector3 tele)
@@ -237,12 +250,14 @@ public class mainScript : MonoBehaviour
         transform.position = tele;
         yield return new WaitForSeconds(2.5f);
         fadeBlack.GetComponent<Animator>().Play("ScreenFadeIn");
+        charCont.isInEndBossFight = false;
     }
 
     public void StartBossFight(string bossFight1)
     {
         PlayerState.IsInBossFight = true;
         bossFight.fightName = bossFight1;
+        bf_instance.gameObject.SetActive(true);
         bf_instance.Initialize();
         StartCoroutine(teleportToBoss(bossFightPos));
         Debug.Log("Start Battle");
@@ -255,7 +270,7 @@ public class mainScript : MonoBehaviour
         fadeBlack = charCont.mainCam.transform.GetChild(0).GetChild(0).GetComponent<Image>();
         fadeBlack.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
         fadeBlack.GetComponent<Animator>().Play("ScreenFadeIn");
-        //Debug.Log(Screen.width + " x " + Screen.height + ", " + Screen.dpi);
+        bf_instance = GameObject.Find("Boss").GetComponent<bossFight>();
         Debug.Log($"{Screen.width} x {Screen.height}, at {Screen.dpi} dpi");
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
         lightArray = new Light[gos.Length];
@@ -278,15 +293,30 @@ public class mainScript : MonoBehaviour
         //Dictionary Rects:
         rectPositions.Add("Heart", new Rect(0, 0, Screen.width / 9.16f, Screen.width / 9.16f));
         rectPositions.Add("Ammo", new Rect(Screen.width / 128.26f, Screen.height - (Screen.height / 3.79f), Screen.width / 8.75f, Screen.width / 8.75f));
-        rectPositions.Add("Time", new Rect(Screen.width - (Screen.width / 6.41f), -(Screen.height / 18.22f), Screen.width / 6.41f, Screen.height / 3.04f));
+        rectPositions.Add("Time", new Rect(Screen.width - (Screen.width / 6.41f) + 15f, -(Screen.height / 18.22f), Screen.width / 6.41f, Screen.height / 3.04f));
         rectPositions.Add("TimeText", new Rect(Screen.width / 1.08f, Screen.height / 10.65f, Screen.width / 3.9f, Screen.height / 5.37f));
 
+    }
+
+    public void DisableBossFigure(string bossLabel)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if(handler_bosses[i] != null)
+            {
+                if(handler_bosses[i].GetComponent<BossHandler>().myName == bossLabel)
+                {
+                    Destroy(handler_bosses[i]);
+                    handler_bosses[i] = null;
+                }
+            }
+        }
     }
 
     public static IEnumerator EnableRoom(GameObject[] correct)
     {
 
-        List<GameObject> RemoveList = AllRooms;
+        List<GameObject> RemoveList = AllRooms.ToArray().ToList<GameObject>();
 
         foreach (GameObject j in correct)
         {
@@ -404,21 +434,24 @@ public class mainScript : MonoBehaviour
     {
         foreach(Collider hit in cols)
         {
-            if(hit.tag == "Puzzle")
+            if(hit.tag == "Puzzle" && !charCont.isInPuzzle)
             {
                 hit.gameObject.AddComponent<Minigame_puzzle>();
                 StartCoroutine(charCont.focusCamera(hit.transform.position));
                 return;
             }
 
-            if(hit.tag == "ghostDiag")
+            if(hit.tag == "ghostDiag" && !charCont.isInDialog)
             {
+                
                 GhostDialogHandler g = hit.gameObject.GetComponent<GhostDialogHandler>();
                 dg.Initialize(g.name, g.lines, "");
+                g.lineNumber++;
+                g.updateLine();
                 return;
             }
 
-            if(hit.tag == "bossHandler")
+            if(hit.tag == "bossHandler" && !charCont.isInDialog)
             {
                 hit.gameObject.GetComponent<BossHandler>().Interact();
                 return;
@@ -439,9 +472,6 @@ public class mainScript : MonoBehaviour
         PlayerState.Time = PlayerState.Time + Time.deltaTime;
         //if (time != null) time.text = convertTime(PlayerState.Seconds);
 
-        if (Input.GetKeyDown(KeyCode.L)) fadeBlack.GetComponent<Animator>().Play("ScreenFadeOut");
-        if (Input.GetKeyDown(KeyCode.J)) fadeBlack.GetComponent<Animator>().Play("ScreenFadeIn");
-
 
         //Lose-Death condition
         if (PlayerState.Health <= 0)
@@ -455,7 +485,7 @@ public class mainScript : MonoBehaviour
         //Note firing / Flashlight toggle
         if (Input.GetKeyDown(KeyCode.Mouse0)) LeftClick = true;
 
-        if(LeftClick)
+        if(LeftClick && !charCont.isInDialog)
         {
             if (PlayerState.IsInBossFight)
             {
