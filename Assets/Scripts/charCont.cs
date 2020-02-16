@@ -17,7 +17,7 @@ public class charCont : MonoBehaviour
     private float runSpeed;
     const float gravity = 20f;
 
-
+    public static readonly Vector3 ScaleOutY = new Vector3(1, 0, 1);
 
     private bool sprint;
     private Transform Mesh;
@@ -46,14 +46,14 @@ public class charCont : MonoBehaviour
     public static Vector3 startingPoint = new Vector3(0f, 3.579f, -1.23f);
 
     //Vector Creation
-    Vector3 moveDir = Vector3.zero;
+    public static Vector3 moveDir = Vector3.zero;
     float mvY;
     float mvX;
     float mvZ;
     public Vector4 walkDirection;
     private Camera[] allCams;
     public bool airStrafing = false;
-
+    public static bool TeleportBuffer;
     private Collider c1;
 
     Vector2 controllermover;
@@ -116,7 +116,7 @@ public class charCont : MonoBehaviour
         mainCam = Camera.main;
         runSpeed = walkSpeed * runMult;
         cc = GetComponent<CharacterController>();
-        walkDirection = new Vector3(1, 0, 1);
+        walkDirection = ScaleOutY;
 
         Mesh = transform.GetChild(0);
         anim = Mesh.GetChild(0).GetComponent<Animator>();
@@ -147,7 +147,7 @@ public class charCont : MonoBehaviour
             roomCamPosition = rc.roomCam.transform;
             StartCoroutine(lerpCamera(roomCamPosition, rc.isHallway));
             StartCoroutine(mainScript.EnableRoom(rc.assets));
-            
+
             c1 = other;
         }
     }
@@ -166,7 +166,7 @@ public class charCont : MonoBehaviour
             "\nPLAYER_ISRUNNING = " + Input.GetKey(KeyCode.LeftShift).ToString().ToUpper() +
             "\nPLAYER_ISGROUNDED = " + cc.isGrounded.ToString().ToUpper() +
             "\nMOVE_VECTOR = " + moveDir +
-            "\nTIME = " + PlayerState.Seconds + 
+            "\nTIME = " + PlayerState.Seconds +
             "\nFramerate = " + 1.0f / Time.deltaTime;
             GUI.skin.textArea.active.background =
             GUI.skin.textArea.normal.background =
@@ -219,7 +219,7 @@ public class charCont : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
 
-        isInPuzzle = 
+        isInPuzzle =
         shouldBeFocused = false;
 
     }
@@ -234,7 +234,7 @@ public class charCont : MonoBehaviour
     IEnumerator lerpCamera(Transform t, bool isHall)
     {
 
-        
+
         if (Time.time > 0.1f && camDirection != GetCamDirection(walkDirection)) canMoveOnTransition = false;
         camDirection = GetCamDirection(walkDirection);
 
@@ -255,13 +255,13 @@ public class charCont : MonoBehaviour
             //float journeyDistance = Vector3.Distance(t.position, transform.position);
             float speed = .1f;
 
-            
+
 
             while (Time.time - startTime < 2f)
             {
                 mainCam.transform.rotation = Quaternion.Lerp(mainCam.transform.rotation, t.rotation, (Time.time - startTime) * speed);
                 mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, t.position, (Time.time - startTime) * speed);
-                if(Time.time - startTime > 1.1f) canMoveOnTransition = true;
+                if (Time.time - startTime > 1.1f) canMoveOnTransition = true;
                 yield return 0;
             }
             //yield return new WaitForSeconds(0.5f);
@@ -272,8 +272,6 @@ public class charCont : MonoBehaviour
 
     void Update()
     {
-
-        
 
         float speed = isSprint() ? runSpeed : walkSpeed; //Sprinting
         anim.speed = isSprint() ? 2 : 1.2f;
@@ -297,7 +295,7 @@ public class charCont : MonoBehaviour
             if (Input.GetKey(KeyCode.A)) mvX += xSpeed; //Left
         }
 
-        if(controllermover != Vector2.zero && CanMove())
+        if (controllermover != Vector2.zero && CanMove())
         {
             mvX = -controllermover.x * speed;
             mvZ = -controllermover.y * speed;
@@ -311,9 +309,11 @@ public class charCont : MonoBehaviour
         else moveDir = new Vector3(mvZ, mvY, mvX);
 
         Direction = (int)((mvX / speed) * 10 + (mvZ / speed));
-
-        cc.Move(moveDir * Time.deltaTime);
+        
+        if(moveDir != Vector3.zero) cc.Move(moveDir * Time.deltaTime);
     }
+
+
 
     IEnumerator MakeLerp(Quaternion one, Quaternion two, float time)
     {

@@ -156,6 +156,7 @@ public class mainScript : MonoBehaviour
     public Vector3 bossFightPos;
     public static Vector3 startingPos;
 
+    private charCont cc_instance;
     public static bossFight bf_instance;
 
     //Interaction Booleans
@@ -182,6 +183,7 @@ public class mainScript : MonoBehaviour
     public static List<GameObject> AllRooms;
     Dictionary<string, Rect> rectPositions = new Dictionary<string, Rect>();
     public static DialogScript dg;
+    public static List<GameObject> dontCheck;
     GUIStyle style;
 
     public static GameObject[] handler_bosses;
@@ -196,7 +198,7 @@ public class mainScript : MonoBehaviour
         {
             handler_bosses[i] = map_parent.transform.GetChild(i).gameObject;
         }
-        
+
 
 
         AllRooms = new List<GameObject>();
@@ -216,7 +218,7 @@ public class mainScript : MonoBehaviour
 
     private void Awake()
     {
-		instance = this;
+        instance = this;
         aud = GetComponent<AudioSource>();
         if (AllRooms == null)
             GetAllMapObjects();
@@ -239,16 +241,19 @@ public class mainScript : MonoBehaviour
 
     public void FinishedBoss()
     {
-        StartCoroutine(teleportToBoss(startingPos));
+        StartCoroutine(fadeTeleport(startingPos));
         PlayerState.Health = 4;
     }
 
-    public IEnumerator teleportToBoss(Vector3 tele)
+    public IEnumerator fadeTeleport(Vector3 tele)
     {
         fadeBlack.GetComponent<Animator>().Play("ScreenFadeOut");
+        cc_instance.enabled = false;
         yield return new WaitForSeconds(1.5f);
         transform.position = tele;
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(2.0f);
+        cc_instance.enabled = true;
+        yield return new WaitForSeconds(0.5f);
         fadeBlack.GetComponent<Animator>().Play("ScreenFadeIn");
         charCont.isInEndBossFight = false;
     }
@@ -259,7 +264,7 @@ public class mainScript : MonoBehaviour
         bossFight.fightName = bossFight1;
         bf_instance.gameObject.SetActive(true);
         bf_instance.Initialize();
-        StartCoroutine(teleportToBoss(bossFightPos));
+        StartCoroutine(fadeTeleport(bossFightPos));
         Debug.Log("Start Battle");
     }
 
@@ -288,6 +293,9 @@ public class mainScript : MonoBehaviour
         style.normal.textColor = Color.black;
         style.fontSize = (int)((100f / 1617f) * Screen.height / Screen.dpi * 72);
 
+        dontCheck = new List<GameObject>();
+        cc_instance = GetComponent<charCont>();
+
         startingPos = transform.position + new Vector3(0, 1, 0);
 
         //Dictionary Rects:
@@ -302,10 +310,11 @@ public class mainScript : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            if(handler_bosses[i] != null)
+            if (handler_bosses[i] != null)
             {
-                if(handler_bosses[i].GetComponent<BossHandler>().myName == bossLabel)
+                if (handler_bosses[i].GetComponent<BossHandler>().myName == bossLabel)
                 {
+                    dontCheck.Add(handler_bosses[i]);
                     Destroy(handler_bosses[i]);
                     handler_bosses[i] = null;
                 }
@@ -318,20 +327,28 @@ public class mainScript : MonoBehaviour
 
         List<GameObject> RemoveList = AllRooms.ToArray().ToList<GameObject>();
 
-        foreach (GameObject j in correct)
+        List<GameObject> corr = correct.ToList<GameObject>();
+
+        foreach (GameObject j in dontCheck)
+        {
+            corr.Remove(j);
+        }
+
+        foreach (GameObject j in corr)
         {
             j.SetActive(true);
             RemoveList.Remove(j);
         }
-            
+
 
         yield return new WaitForSeconds(1.0f);
 
         foreach (GameObject k in RemoveList)
         {
-            k.SetActive(false);
+            try { k.SetActive(false); }
+            catch (MissingReferenceException) { Debug.Log($"Caught {k}"); }
         }
-            
+
     }
 
     IEnumerator mask(bool a)
@@ -339,13 +356,16 @@ public class mainScript : MonoBehaviour
         CR_mask = false;
         yield return new WaitForSeconds(0.5f);
 
-        if (a) charCont.mainCam.cullingMask &= ~(1 << LayerMask.NameToLayer("ghosts"));//Enables culling mask for ghosts
+        if (a) charCont.mainCam.cullingMask &= ~(1 << LayerMask.NameToLayer("ghosts")); //Enables culling mask for ghosts
         else charCont.mainCam.cullingMask |= 1 << LayerMask.NameToLayer("ghosts"); //Enables culling mask for the ghosts
-        
+
         maskOn = !a;
 
         for (int i = 0; i < lightArray.Length; i++)
+        {
             lightArray[i].intensity = maskOn ? (lightArray[i].intensity * intensityMult) : (lightArray[i].intensity / intensityMult);
+            lightArray[i].range *= (maskOn ? 1.5f : 0.666f);
+        }
 
         CR_mask = true;
 
@@ -367,7 +387,7 @@ public class mainScript : MonoBehaviour
         GUI.Label(rectPositions["TimeText"], convertTime(PlayerState.Seconds), style);
         //Flashlight
 
-        if(flashDirection == Vector3.zero)
+        if (flashDirection == Vector3.zero)
         {
             Event current = Event.current;
             Vector2 mousePos = new Vector2();
@@ -377,12 +397,13 @@ public class mainScript : MonoBehaviour
 
             Ray ray = charCont.mainCam.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, charCont.mainCam.nearClipPlane));
             if (Physics.Raycast(ray, out flashHit, Mathf.Infinity, lmask)) flashlight.transform.LookAt(flashHit.point);
+            flashlight.transform.position = transform.position + (flashHit.point - transform.position).normalized;
         }
         else
         {
             flashlight.transform.rotation = Quaternion.LookRotation(flashDirection);
         }
-        
+
 
         //flashlight.transform.eulerAngles = new Vector3(Mathf.Clamp(flashlight.transform.eulerAngles.x, -20f, 15f), flashlight.transform.eulerAngles.y, 0f);
         // ^ Clamps vertical rotation between two constants. Issue: Currently locks to one constant, doesn't go negative
@@ -432,18 +453,18 @@ public class mainScript : MonoBehaviour
 
     void TryOpenDoors(Collider[] cols)
     {
-        foreach(Collider hit in cols)
+        foreach (Collider hit in cols)
         {
-            if(hit.tag == "Puzzle" && !charCont.isInPuzzle)
+            if (hit.tag == "Puzzle" && !charCont.isInPuzzle)
             {
                 hit.gameObject.AddComponent<Minigame_puzzle>();
                 StartCoroutine(charCont.focusCamera(hit.transform.position));
                 return;
             }
 
-            if(hit.tag == "ghostDiag" && !charCont.isInDialog)
+            if (hit.tag == "ghostDiag" && !charCont.isInDialog)
             {
-                
+
                 GhostDialogHandler g = hit.gameObject.GetComponent<GhostDialogHandler>();
                 dg.Initialize(g.name, g.lines, "");
                 g.lineNumber++;
@@ -451,13 +472,13 @@ public class mainScript : MonoBehaviour
                 return;
             }
 
-            if(hit.tag == "bossHandler" && !charCont.isInDialog)
+            if (hit.tag == "bossHandler" && !charCont.isInDialog)
             {
                 hit.gameObject.GetComponent<BossHandler>().Interact();
                 return;
             }
 
-            if(hit.tag == "door")
+            if (hit.tag == "door")
             {
                 DoorHandler dh = hit.transform.parent.parent.gameObject.GetComponent<DoorHandler>();
                 dh.OpenCloseDoor();
@@ -469,6 +490,7 @@ public class mainScript : MonoBehaviour
 
     void Update()
     {
+
         PlayerState.Time = PlayerState.Time + Time.deltaTime;
         //if (time != null) time.text = convertTime(PlayerState.Seconds);
 
@@ -477,15 +499,20 @@ public class mainScript : MonoBehaviour
         if (PlayerState.Health <= 0)
         {
             //SceneManager.LoadScene("loseCondition"); //Very tenuous
-
         }
 
-        if(Input.GetKeyDown(KeyCode.K)) dg.Initialize("GLADOS", "I think we can put our differences behind us\nFor science.\nYou monster.\nPlease place the Weighted Storage Cube on the Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button", "");
+        if (Input.GetKeyDown(KeyCode.K)) dg.Initialize("GLADOS", "I think we can put our differences behind us\nFor science.\nYou monster.\nPlease place the Weighted Storage Cube on the Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button", "");
+
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            Debug.Log("Taking you back");
+            StartCoroutine(fadeTeleport(startingPos));
+        }
 
         //Note firing / Flashlight toggle
         if (Input.GetKeyDown(KeyCode.Mouse0)) LeftClick = true;
 
-        if(LeftClick && !charCont.isInDialog)
+        if (LeftClick && !charCont.isInDialog)
         {
             if (PlayerState.IsInBossFight)
             {
@@ -524,7 +551,7 @@ public class mainScript : MonoBehaviour
         */
 
         if (Input.GetKeyDown(KeyCode.E)) Interact = true;
-        if(Interact)
+        if (Interact)
         {
             //RaycastHit[] hits = Physics.CapsuleCastAll();
             Collider[] hits = Physics.OverlapSphere(transform.position, 2f);
@@ -532,5 +559,6 @@ public class mainScript : MonoBehaviour
         }
         Interact = false;
     }
+
 
 }

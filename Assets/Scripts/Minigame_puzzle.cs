@@ -69,6 +69,7 @@ public class Minigame_puzzle : MonoBehaviour
         Debug.Log("You win");
         yield return new WaitForSeconds(aud.clip.length);
         mainScript.AllRooms.Remove(gameObject);
+        mainScript.dontCheck.Add(gameObject);
         Destroy(gameObject);
         GetComponent<Key_Handler>().win();
     }
@@ -149,6 +150,7 @@ public class Minigame_puzzle : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.X)) { StartCoroutine(GameWin()); }
 
         if (canAdd)
         {

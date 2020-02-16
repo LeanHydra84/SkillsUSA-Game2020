@@ -34,6 +34,7 @@ Transform:
   m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_Children:
   - {fileID: 1574883690450979228}
+  - {fileID: 1574883690838927098}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -198,6 +199,7 @@ MonoBehaviour:
     m_StretchWidth: 1
     m_StretchHeight: 0
   lockText: {fileID: 0}
+  bossFightPos: {x: 0, y: 0, z: 0}
   maskOn: 0
   intensityMult: 2
   heart:
@@ -267,7 +269,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8565306009792507797}
-  - {fileID: 1574883690838927098}
   m_Father: {fileID: 1574883689146451648}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -302,7 +303,7 @@ Transform:
   m_LocalPosition: {x: 0.162, y: 0, z: 1.027}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1574883690450979228}
+  m_Father: {fileID: 1574883689146451648}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!108 &1574883690838927096
