@@ -56,6 +56,8 @@ public class Bullet
 
 public class bossFight : MonoBehaviour
 {
+
+    public static bossFight instance;
     private int bossHealth;
 
     public static string fightName;
@@ -96,6 +98,7 @@ public class bossFight : MonoBehaviour
 
     void Awake()
     {
+        instance = this;
         Object[] textures = Resources.LoadAll("BULLETS", typeof(Sprite));
 
         foreach (Object a in textures)

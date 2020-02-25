@@ -156,9 +156,6 @@ public class mainScript : MonoBehaviour
     public Vector3 bossFightPos;
     public static Vector3 startingPos;
 
-    private charCont cc_instance;
-    public static bossFight bf_instance;
-
     //Interaction Booleans
     private bool LeftClick;
     private bool Interact;
@@ -248,11 +245,11 @@ public class mainScript : MonoBehaviour
     public IEnumerator fadeTeleport(Vector3 tele)
     {
         fadeBlack.GetComponent<Animator>().Play("ScreenFadeOut");
-        cc_instance.enabled = false;
+        charCont.instance.enabled = false;
         yield return new WaitForSeconds(1.5f);
         transform.position = tele;
         yield return new WaitForSeconds(2.0f);
-        cc_instance.enabled = true;
+        charCont.instance.enabled = true;
         yield return new WaitForSeconds(0.5f);
         fadeBlack.GetComponent<Animator>().Play("ScreenFadeIn");
         charCont.isInEndBossFight = false;
@@ -262,8 +259,8 @@ public class mainScript : MonoBehaviour
     {
         PlayerState.IsInBossFight = true;
         bossFight.fightName = bossFight1;
-        bf_instance.gameObject.SetActive(true);
-        bf_instance.Initialize();
+        bossFight.instance.gameObject.SetActive(true);
+        bossFight.instance.Initialize();
         StartCoroutine(fadeTeleport(bossFightPos));
         Debug.Log("Start Battle");
     }
@@ -275,7 +272,7 @@ public class mainScript : MonoBehaviour
         fadeBlack = charCont.mainCam.transform.GetChild(0).GetChild(0).GetComponent<Image>();
         fadeBlack.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
         fadeBlack.GetComponent<Animator>().Play("ScreenFadeIn");
-        bf_instance = GameObject.Find("Boss").GetComponent<bossFight>();
+        bossFight.instance = GameObject.Find("Boss").GetComponent<bossFight>();
         Debug.Log($"{Screen.width} x {Screen.height}, at {Screen.dpi} dpi");
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
         lightArray = new Light[gos.Length];
@@ -294,7 +291,6 @@ public class mainScript : MonoBehaviour
         style.fontSize = (int)((100f / 1617f) * Screen.height / Screen.dpi * 72);
 
         dontCheck = new List<GameObject>();
-        cc_instance = GetComponent<charCont>();
 
         startingPos = transform.position + new Vector3(0, 1, 0);
 
@@ -312,7 +308,7 @@ public class mainScript : MonoBehaviour
         {
             if (handler_bosses[i] != null)
             {
-                if (handler_bosses[i].GetComponent<BossHandler>().myName == bossLabel)
+                if (handler_bosses[i].GetComponent<BossHandler>().myName.Equals(bossLabel))
                 {
                     dontCheck.Add(handler_bosses[i]);
                     Destroy(handler_bosses[i]);
@@ -458,6 +454,7 @@ public class mainScript : MonoBehaviour
             if (hit.tag == "Puzzle" && !charCont.isInPuzzle)
             {
                 hit.gameObject.AddComponent<Minigame_puzzle>();
+                charCont.instance.EndLerpCoroutines();
                 StartCoroutine(charCont.focusCamera(hit.transform.position));
                 return;
             }

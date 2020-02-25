@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class charCont : MonoBehaviour
 {
-
+    public static charCont instance;
     PlayerControls controls;
 
     //Values
@@ -58,6 +58,8 @@ public class charCont : MonoBehaviour
 
     Vector2 controllermover;
 
+    static List<Coroutine> CurrentCoroutines;
+
     //Trigger booleans
     bool setJump;
 
@@ -93,10 +95,22 @@ public class charCont : MonoBehaviour
         c.enabled = true;
     }
 
-
+    public void EndLerpCoroutines()
+    {
+        if(CurrentCoroutines.Count > 0)
+        {
+            foreach (Coroutine c in CurrentCoroutines)
+            {
+                StopCoroutine(c);
+            }
+            CurrentCoroutines.Clear();
+        }
+        
+    }
 
     private void Awake()
     {
+        instance = this;
         controls = new PlayerControls();
         controls.Controller.Enable();
 
@@ -105,7 +119,7 @@ public class charCont : MonoBehaviour
         controls.Controller.Move.canceled += ctx => controllermover = Vector2.zero;
         controls.Controller.Sprint.performed += ctx => sprint = true;
         controls.Controller.Sprint.canceled += ctx => sprint = false;
-
+        CurrentCoroutines = new List<Coroutine>();
         allCams = Camera.allCameras;
         EnableCamera(Camera.main);
     }
@@ -145,8 +159,9 @@ public class charCont : MonoBehaviour
             roomClass rc = other.gameObject.GetComponent<roomClass>();
             walkDirection = rc.md;
             roomCamPosition = rc.roomCam.transform;
-            StartCoroutine(lerpCamera(roomCamPosition, rc.isHallway));
-            StartCoroutine(mainScript.EnableRoom(rc.assets));
+            EndLerpCoroutines();
+            CurrentCoroutines.Add(StartCoroutine(lerpCamera(roomCamPosition, rc.isHallway)));
+            CurrentCoroutines.Add(StartCoroutine(mainScript.EnableRoom(rc.assets)));
 
             c1 = other;
         }
@@ -268,6 +283,7 @@ public class charCont : MonoBehaviour
 
         }
         canMoveOnTransition = true;
+        //EndLerpCoroutines();
     }
 
     void Update()
