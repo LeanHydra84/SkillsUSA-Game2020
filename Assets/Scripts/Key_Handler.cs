@@ -33,10 +33,12 @@ public class Key_Handler : MonoBehaviour
         }
 
         spr.sprite = KeySprites[bossNumber * 2 - 2];
+        gameObject.SetActive(false);
     }
     
     void recalculateImages(int des)
     {
+        
         if (des == keyNumber)
         {
             spr.sprite = KeySprites[bossNumber * 2 - 1];

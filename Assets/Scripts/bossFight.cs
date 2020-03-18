@@ -60,7 +60,7 @@ public class bossFight : MonoBehaviour
     public static bossFight instance;
     private int bossHealth;
 
-    public static string fightName;
+    public static string fightName { get; set; }
 
     public GameObject[] nameNumber;
 
@@ -83,7 +83,7 @@ public class bossFight : MonoBehaviour
     public static int[] anglesX;
     private readonly int[] SG_angles = { 0, 15, -15 };
 
-    public static Dictionary<string, Sprite> spriteNames = new Dictionary<string, Sprite>();
+    public static Dictionary<string, Sprite> spriteNames; 
 
     public int BossHealth
     {
@@ -98,20 +98,25 @@ public class bossFight : MonoBehaviour
 
     void Awake()
     {
-        instance = this;
-        Object[] textures = Resources.LoadAll("BULLETS", typeof(Sprite));
-
-        foreach (Object a in textures)
+        if(spriteNames == null)
         {
-            spriteNames.Add(a.name, (Sprite)a);
+            spriteNames = new Dictionary<string, Sprite>();
+            instance = this;
+            Object[] textures = Resources.LoadAll("BULLETS", typeof(Sprite));
+
+            foreach (Object a in textures)
+            {
+                spriteNames.Add(a.name, (Sprite)a);
+            }
         }
+        
     }
 
     public static int fire_speed;
 
     void Start()
     {
-        
+      
         player = GameObject.FindWithTag("Player").transform;
         music_player = GetComponent<AudioSource>();
         projectile = projE;
@@ -228,8 +233,10 @@ public class bossFight : MonoBehaviour
         }
     }
 
+
     void Death()
     {
+        PlayerState.IsInBossFight = false;
         charCont.isInEndBossFight = true;
         Debug.Log("Death method called");
         isPlaying = false;
@@ -249,7 +256,6 @@ public class bossFight : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         System.GC.Collect();
-        PlayerState.IsInBossFight = false;
         //StartCoroutine(mainScript.instance.teleportToBoss(mainScript.startingPos));
         mainScript.instance.FinishedBoss();
     }

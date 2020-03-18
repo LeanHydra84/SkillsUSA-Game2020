@@ -47,8 +47,8 @@ public class DialogScript : MonoBehaviour
 
     public void Initialize(string name, string text, string ib)
     {
-        lines = Regex.Split(text, "\r\n ?|\n");
-        myName = name;
+        lines = Regex.Split(text, ":=");
+        myName = (ib == "") ? name : BossHandler.names[name];
         CanRun = 1;
         additionConstant = 0.3f;
         startTime = Time.time;

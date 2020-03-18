@@ -103,7 +103,7 @@ public class projectileScript : MonoBehaviour
             StartCoroutine(fadeOut());
         }
 
-        if (col.collider.gameObject.tag == "Player")
+        if (col.collider.gameObject.tag == "Player" && PlayerState.IsInBossFight)
         {
             PlayerState.Health -= damage;
             Destroy(gameObject);

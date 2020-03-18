@@ -10,6 +10,8 @@ using System.Linq;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Switch;
 
+public delegate void DarkAction_Bool(bool x);
+public delegate void DarkAction();
 public static class PlayerState
 {
     static IEnumerator healthDelay()
@@ -19,6 +21,7 @@ public static class PlayerState
         canLose = true;
     }
 
+    static bool alive;
     static int pianoKeys;
     static int health;
     static float time;
@@ -31,7 +34,7 @@ public static class PlayerState
     public static float y;
     public static float z;
 
-    static PlayerState()
+    public static void Reset()
     {
         position = new float[2];
         Keys = new int[4];
@@ -42,10 +45,16 @@ public static class PlayerState
         canLose = true;
         ammo = 0;
         isInBossFight = false; //SHOULD NOT BE TRUE
+        alive = true;
 
         System.Random rnd = new System.Random();
-        Bosses = Enumerable.Range(1, 4).OrderBy(r => rnd.Next()).ToArray();
+        Bosses = Enumerable.Range(1, 8).OrderBy(r => rnd.Next()).ToArray();
 
+    }
+
+    static PlayerState()
+    {
+        Reset();
     }
 
     public static int Ammo
@@ -53,6 +62,8 @@ public static class PlayerState
         get => ammo;
         set { if (value < 8) ammo = value; }
     }
+
+    public static bool IsAlive { get => alive; set => alive = value; }
 
     private static bool isInBossFight;
     public static bool IsInBossFight
@@ -65,7 +76,7 @@ public static class PlayerState
         }
     }
 
-    public static int[] Bosses { get; }
+    public static int[] Bosses { get; set; }
 
     public static int Health
     {
@@ -146,6 +157,7 @@ public class mainScript : MonoBehaviour
 
     //Misc
     private Light flashlight;
+    private GameObject directionalLight;
     private Vector3 flashDirection;
     public float timeScale;
     public Text time;
@@ -217,8 +229,7 @@ public class mainScript : MonoBehaviour
     {
         instance = this;
         aud = GetComponent<AudioSource>();
-        if (AllRooms == null)
-            GetAllMapObjects();
+        GetAllMapObjects();
 
         controls = new PlayerControls();
         controls.Controller.Enable();
@@ -267,7 +278,7 @@ public class mainScript : MonoBehaviour
 
     void Start()
     {
-
+        directionalLight = GameObject.Find("D1");
         dg = gameObject.AddComponent<DialogScript>();
         fadeBlack = charCont.mainCam.transform.GetChild(0).GetChild(0).GetComponent<Image>();
         fadeBlack.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
@@ -277,6 +288,12 @@ public class mainScript : MonoBehaviour
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
         lightArray = new Light[gos.Length];
         for (int i = 0; i < gos.Length; i++) lightArray[i] = gos[i].GetComponent<Light>();
+
+        for (int i = 0; i < lightArray.Length; i++)
+        {
+            lightArray[i].gameObject.SetActive(false);
+            lightArray[i].enabled = true;
+        }
         flashlight = GameObject.FindWithTag("flashlight").GetComponent<Light>();
         lmask = ~((
             1 << LayerMask.NameToLayer("triggers")) |
@@ -285,7 +302,7 @@ public class mainScript : MonoBehaviour
         );
         maskOn = false;
         CR_mask = true;
-
+        MaskHolder(true);
         style = new GUIStyle();
         style.normal.textColor = Color.black;
         style.fontSize = (int)((100f / 1617f) * Screen.height / Screen.dpi * 72);
@@ -293,8 +310,9 @@ public class mainScript : MonoBehaviour
         dontCheck = new List<GameObject>();
 
         startingPos = transform.position + new Vector3(0, 1, 0);
-
+        dontCheck.Clear();
         //Dictionary Rects:
+        rectPositions.Clear();
         rectPositions.Add("Heart", new Rect(0, 0, Screen.width / 9.16f, Screen.width / 9.16f));
         rectPositions.Add("Ammo", new Rect(Screen.width / 128.26f, Screen.height - (Screen.height / 3.79f), Screen.width / 8.75f, Screen.width / 8.75f));
         rectPositions.Add("Time", new Rect(Screen.width - (Screen.width / 6.41f) + 15f, -(Screen.height / 18.22f), Screen.width / 6.41f, Screen.height / 3.04f));
@@ -321,18 +339,19 @@ public class mainScript : MonoBehaviour
     public static IEnumerator EnableRoom(GameObject[] correct)
     {
 
-        List<GameObject> RemoveList = AllRooms.ToArray().ToList<GameObject>();
+        List<GameObject> RemoveList = AllRooms.ToList();
 
-        List<GameObject> corr = correct.ToList<GameObject>();
+        //List<GameObject> corr = correct.ToList();
 
-        foreach (GameObject j in dontCheck)
+        //foreach (GameObject j in dontCheck)
+        //{
+        //    corr.Remove(j);
+        //}
+
+        foreach (GameObject j in correct)
         {
-            corr.Remove(j);
-        }
-
-        foreach (GameObject j in corr)
-        {
-            j.SetActive(true);
+            try { j.SetActive(true); }
+            catch (MissingReferenceException) { Debug.Log("Failed to create object"); }
             RemoveList.Remove(j);
         }
 
@@ -347,16 +366,43 @@ public class mainScript : MonoBehaviour
 
     }
 
-    IEnumerator mask(bool a)
+    public IEnumerator FadeInAndOut(float time, DarkAction_Bool meAction, bool a)
+    {
+        Animator _fadeAnimator = fadeBlack.GetComponent<Animator>();
+        float _speed = _fadeAnimator.speed;
+        _fadeAnimator.speed = 2f;
+        _fadeAnimator.Play("ScreenFadeOut");
+        yield return new WaitForSeconds(time);
+        meAction(a);
+        _fadeAnimator.Play("ScreenFadeIn");
+        _fadeAnimator.speed = _speed;
+    }
+
+    public IEnumerator FadeInAndOut(float time)
+    {
+        Animator _fadeAnimator = fadeBlack.GetComponent<Animator>();
+        _fadeAnimator.Play("ScreenFadeOut");
+        yield return new WaitForSeconds(time);
+        _fadeAnimator.Play("ScreenFadeIn");
+    }
+    public IEnumerator FadeInAndOut(float time, DarkAction meAction)
+    {
+        Animator _fadeAnimator = fadeBlack.GetComponent<Animator>();
+        _fadeAnimator.Play("ScreenFadeOut");
+        yield return new WaitForSeconds(time);
+        meAction();
+        _fadeAnimator.Play("ScreenFadeIn");
+    }
+
+    void MaskHolder(bool a)
     {
         CR_mask = false;
-        yield return new WaitForSeconds(0.5f);
 
         if (a) charCont.mainCam.cullingMask &= ~(1 << LayerMask.NameToLayer("ghosts")); //Enables culling mask for ghosts
         else charCont.mainCam.cullingMask |= 1 << LayerMask.NameToLayer("ghosts"); //Enables culling mask for the ghosts
 
         maskOn = !a;
-
+        directionalLight.SetActive(maskOn);
         for (int i = 0; i < lightArray.Length; i++)
         {
             lightArray[i].intensity = maskOn ? (lightArray[i].intensity * intensityMult) : (lightArray[i].intensity / intensityMult);
@@ -364,9 +410,9 @@ public class mainScript : MonoBehaviour
         }
 
         CR_mask = true;
-
     }
 
+    void mask(bool a) { StartCoroutine(FadeInAndOut(1.4f, MaskHolder, a)); }
 
 
     void OnGUI()
@@ -399,11 +445,6 @@ public class mainScript : MonoBehaviour
         {
             flashlight.transform.rotation = Quaternion.LookRotation(flashDirection);
         }
-
-
-        //flashlight.transform.eulerAngles = new Vector3(Mathf.Clamp(flashlight.transform.eulerAngles.x, -20f, 15f), flashlight.transform.eulerAngles.y, 0f);
-        // ^ Clamps vertical rotation between two constants. Issue: Currently locks to one constant, doesn't go negative
-
 
 
         //MAIN MENU
@@ -459,17 +500,16 @@ public class mainScript : MonoBehaviour
                 return;
             }
 
-            if (hit.tag == "ghostDiag" && !charCont.isInDialog)
+            if (hit.tag == "ghostDiag" && !charCont.isInDialog && maskOn)
             {
 
                 GhostDialogHandler g = hit.gameObject.GetComponent<GhostDialogHandler>();
                 dg.Initialize(g.name, g.lines, "");
-                g.lineNumber++;
-                g.updateLine();
+                g.LineNumber++;
                 return;
             }
 
-            if (hit.tag == "bossHandler" && !charCont.isInDialog)
+            if (hit.tag == "bossHandler" && !charCont.isInDialog && maskOn)
             {
                 hit.gameObject.GetComponent<BossHandler>().Interact();
                 return;
@@ -485,20 +525,35 @@ public class mainScript : MonoBehaviour
         }
     }
 
+    IEnumerator DeathMethod()
+    {
+        Animator _fadeAnimator = fadeBlack.GetComponent<Animator>();
+        _fadeAnimator.Play("ScreenFadeOut");
+        charCont.instance.enabled = false;
+        yield return new WaitForSeconds(1.25f);
+        SceneManager.LoadScene("GameOver");
+    }
+
     void Update()
     {
 
         PlayerState.Time = PlayerState.Time + Time.deltaTime;
         //if (time != null) time.text = convertTime(PlayerState.Seconds);
 
-
         //Lose-Death condition
         if (PlayerState.Health <= 0)
         {
-            //SceneManager.LoadScene("loseCondition"); //Very tenuous
+            if (PlayerState.IsAlive) StartCoroutine(DeathMethod());
         }
 
-        if (Input.GetKeyDown(KeyCode.K)) dg.Initialize("GLADOS", "I think we can put our differences behind us\nFor science.\nYou monster.\nPlease place the Weighted Storage Cube on the Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button", "");
+
+        //DEBUG KEYS
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            PlayerState.Health--;
+        }
+
+        if (Input.GetKeyDown(KeyCode.K)) dg.Initialize("GLADOS", "I think we can put our differences behind us:=For science.:=You monster.:=Please place the Weighted Storage Cube on the Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button", "");
 
         if (Input.GetKeyDown(KeyCode.V))
         {
@@ -538,7 +593,7 @@ public class mainScript : MonoBehaviour
         }
         LeftClick = false;
         if (Input.GetKeyDown(KeyCode.M) && CR_mask)
-            StartCoroutine(mask(maskOn));
+            mask(maskOn);
         /*
         if (Input.GetKeyDown(KeyCode.Escape))
 		{

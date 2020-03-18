@@ -79,8 +79,7 @@ public class charCont : MonoBehaviour
         {
             if (iswalking != value)
             {
-                //anim.SetTrigger(value ? "StartWalk" : "EndWalk");
-                anim.enabled = value;
+                anim.SetTrigger(value ? "StartWalk" : "EndWalk");
             }
             iswalking = value;
         }
@@ -134,9 +133,7 @@ public class charCont : MonoBehaviour
 
         Mesh = transform.GetChild(0);
         anim = Mesh.GetChild(0).GetComponent<Animator>();
-
-        anim.SetTrigger("StartWalk");
-        anim.enabled = false;
+        //anim.SetTrigger("StartWalk");
     }
 
     public void ChangeCamera(roomClass rc) //Allows camera change to be called by any script with the same method
@@ -151,7 +148,7 @@ public class charCont : MonoBehaviour
         if (other.tag == "triggerRoom" && other != c1)
         {
 
-            if (Time.time > 1f && c1.GetComponent<roomClass>().isHallway) //Emables camera after exiting hallway, sets position to exiting position
+            if (Time.timeSinceLevelLoad > 1f && c1.GetComponent<roomClass>().isHallway) //Emables camera after exiting hallway, sets position to exiting position
             {
                 EnableCamera(mainCam);
                 //mainCam.transform.position = c1.GetComponent<roomClass>().roomCam.transform.position;
@@ -207,7 +204,7 @@ public class charCont : MonoBehaviour
     {
         isInPuzzle = true;
         float StartTime = Time.time;
-        float EndTime = 0.2f + StartTime;
+        float EndTime = 0.5f + StartTime;
         Vector3 startPoint = mainCam.transform.position;
         Vector3 focusPoint = input + new Vector3(0, 2, 2);
         Quaternion toRotation = Quaternion.LookRotation(input - focusPoint);
@@ -215,22 +212,22 @@ public class charCont : MonoBehaviour
 
         while (Time.time < EndTime)
         {
-            float timeProg = (Time.time - StartTime) / 0.2f;
-            mainCam.transform.rotation = Quaternion.Lerp(fromRotation, toRotation, timeProg);
-            mainCam.transform.position = Vector3.Lerp(startPoint, focusPoint, timeProg);
+            float timeProg = (Time.time - StartTime) / 0.5f;
+            mainCam.transform.rotation = Quaternion.Lerp(mainCam.transform.rotation, toRotation, timeProg);
+            mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, focusPoint, timeProg);
             yield return new WaitForFixedUpdate();
         }
 
         yield return new WaitUntil(ShouldFocus);
 
         StartTime = Time.time;
-        EndTime = 0.2f + StartTime;
+        EndTime = 0.5f + StartTime;
 
         while (Time.time < EndTime)
         {
-            float timeProg = (Time.time - StartTime) / 0.2f;
-            mainCam.transform.rotation = Quaternion.Lerp(toRotation, roomCamPosition.rotation, timeProg);
-            mainCam.transform.position = Vector3.Lerp(focusPoint, roomCamPosition.position, timeProg);
+            float timeProg = (Time.time - StartTime) / 0.5f;
+            mainCam.transform.rotation = Quaternion.Lerp(mainCam.transform.rotation, roomCamPosition.rotation, timeProg);
+            mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, roomCamPosition.position, timeProg);
             yield return new WaitForFixedUpdate();
         }
 
@@ -329,7 +326,29 @@ public class charCont : MonoBehaviour
         if(moveDir != Vector3.zero) cc.Move(moveDir * Time.deltaTime);
     }
 
+    public static void CameraShake(int amount)
+    {
+        instance.StartCoroutine(instance.camshake(amount));
+    }
 
+    private IEnumerator camshake(float amount)
+    {
+        Vector3 starting = mainCam.transform.position;
+        Vector3 NoWaste = new Vector3();
+        for (int i = 0; i < amount; i++)
+        {
+            NoWaste.x = Random.Range(-1f, 1f);
+            NoWaste.y = Random.Range(-1f, 1f);
+            NoWaste.z = Random.Range(-1f, 1f);
+
+            mainCam.transform.position += NoWaste;
+            yield return new WaitForSeconds(Random.Range(0.02f, 0.2f));
+        }
+
+        mainCam.transform.position = starting;
+
+
+    }
 
     IEnumerator MakeLerp(Quaternion one, Quaternion two, float time)
     {
