@@ -337,12 +337,16 @@ public class charCont : MonoBehaviour
         Vector3 NoWaste = new Vector3();
         for (int i = 0; i < amount; i++)
         {
-            NoWaste.x = Random.Range(-1f, 1f);
-            NoWaste.y = Random.Range(-1f, 1f);
-            NoWaste.z = Random.Range(-1f, 1f);
+            NoWaste.x = Random.Range(-0.5f, 0.5f);
+            NoWaste.y = Random.Range(-0.5f, 0.5f);
+            //NoWaste.z = Random.Range(-1f, 1f);
 
             mainCam.transform.position += NoWaste;
-            yield return new WaitForSeconds(Random.Range(0.02f, 0.2f));
+            yield return new WaitForSeconds(Random.Range(0.02f, 0.06f));
+            mainCam.transform.position = starting;
+            yield return new WaitForSeconds(Random.Range(0.02f, 0.06f));
+
+
         }
 
         mainCam.transform.position = starting;

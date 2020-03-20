@@ -167,6 +167,8 @@ public class mainScript : MonoBehaviour
     public Text lockText;
     public Vector3 bossFightPos;
     public static Vector3 startingPos;
+    Animator FadeAnimator;
+
 
     //Interaction Booleans
     private bool LeftClick;
@@ -286,6 +288,8 @@ public class mainScript : MonoBehaviour
         bossFight.instance = GameObject.Find("Boss").GetComponent<bossFight>();
         Debug.Log($"{Screen.width} x {Screen.height}, at {Screen.dpi} dpi");
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
+        FadeAnimator = fadeBlack.GetComponent<Animator>();
+
         lightArray = new Light[gos.Length];
         for (int i = 0; i < gos.Length; i++) lightArray[i] = gos[i].GetComponent<Light>();
 
@@ -311,6 +315,7 @@ public class mainScript : MonoBehaviour
 
         startingPos = transform.position + new Vector3(0, 1, 0);
         dontCheck.Clear();
+
         //Dictionary Rects:
         rectPositions.Clear();
         rectPositions.Add("Heart", new Rect(0, 0, Screen.width / 9.16f, Screen.width / 9.16f));
@@ -366,32 +371,31 @@ public class mainScript : MonoBehaviour
 
     }
 
+    
+
     public IEnumerator FadeInAndOut(float time, DarkAction_Bool meAction, bool a)
     {
-        Animator _fadeAnimator = fadeBlack.GetComponent<Animator>();
-        float _speed = _fadeAnimator.speed;
-        _fadeAnimator.speed = 2f;
-        _fadeAnimator.Play("ScreenFadeOut");
+        float _speed = FadeAnimator.speed;
+        FadeAnimator.speed = 2f;
+        FadeAnimator.Play("ScreenFadeOut");
         yield return new WaitForSeconds(time);
         meAction(a);
-        _fadeAnimator.Play("ScreenFadeIn");
-        _fadeAnimator.speed = _speed;
+        FadeAnimator.Play("ScreenFadeIn");
+        FadeAnimator.speed = _speed;
     }
 
     public IEnumerator FadeInAndOut(float time)
     {
-        Animator _fadeAnimator = fadeBlack.GetComponent<Animator>();
-        _fadeAnimator.Play("ScreenFadeOut");
+        FadeAnimator.Play("ScreenFadeOut");
         yield return new WaitForSeconds(time);
-        _fadeAnimator.Play("ScreenFadeIn");
+        FadeAnimator.Play("ScreenFadeIn");
     }
     public IEnumerator FadeInAndOut(float time, DarkAction meAction)
     {
-        Animator _fadeAnimator = fadeBlack.GetComponent<Animator>();
-        _fadeAnimator.Play("ScreenFadeOut");
+        FadeAnimator.Play("ScreenFadeOut");
         yield return new WaitForSeconds(time);
         meAction();
-        _fadeAnimator.Play("ScreenFadeIn");
+        FadeAnimator.Play("ScreenFadeIn");
     }
 
     void MaskHolder(bool a)

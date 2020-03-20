@@ -305,7 +305,7 @@ public class Minigame_puzzle : MonoBehaviour
                 if (!ddr[i].isLegal())
                 {
                     missed++;
-                    charCont.CameraShake(4);
+                    charCont.CameraShake(6);
                     Debug.Log(missed + " Miss");
                     ddr.Remove(ddr[i]);
                     if (missed > 3) StartCoroutine(RestartDance());
@@ -351,7 +351,7 @@ public class Minigame_puzzle : MonoBehaviour
         else
         {
             missed++;
-            charCont.CameraShake(4);
+            charCont.CameraShake(6);
         }
         if (missed > 3) StartCoroutine(RestartDance());
 
