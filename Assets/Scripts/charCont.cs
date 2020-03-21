@@ -130,7 +130,6 @@ public class charCont : MonoBehaviour
         runSpeed = walkSpeed * runMult;
         cc = GetComponent<CharacterController>();
         walkDirection = ScaleOutY;
-
         Mesh = transform.GetChild(0);
         anim = Mesh.GetChild(0).GetComponent<Animator>();
         //anim.SetTrigger("StartWalk");
@@ -335,10 +334,13 @@ public class charCont : MonoBehaviour
     {
         Vector3 starting = mainCam.transform.position;
         Vector3 NoWaste = new Vector3();
+
+        float sf = 0.2f;
+
         for (int i = 0; i < amount; i++)
         {
-            NoWaste.x = Random.Range(-0.5f, 0.5f);
-            NoWaste.y = Random.Range(-0.5f, 0.5f);
+            NoWaste.x = Random.Range(-sf, sf);
+            NoWaste.y = Random.Range(-sf, sf);
             //NoWaste.z = Random.Range(-1f, 1f);
 
             mainCam.transform.position += NoWaste;

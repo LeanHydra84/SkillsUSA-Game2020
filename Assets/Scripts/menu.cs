@@ -8,6 +8,28 @@ using System.IO;
 using System;
 using System.Runtime.Serialization.Formatters.Binary;
 
+
+public static class Settings
+{
+
+    static Settings()
+    {
+        volume = 100;
+    }
+
+    static int volume;
+    public static int Volume 
+    { 
+        get => volume;
+        set
+        {
+            if (value >= 0 && value <= 100)
+                volume = value;
+        }
+    }
+
+}
+
 [Serializable]
 public class transDat
 {
@@ -25,12 +47,18 @@ public class transDat
 public class menu : MonoBehaviour, IPointerClickHandler
 {
 
+    public Dictionary<string, Action> Buttons;
+
     public static menu instance;
 
     public Text Press_Label;
     public Image Menu_Br;
 
+    public GameObject[] ButtonLayout;
+
     private int MenuStatus;
+
+
 
     static menu()
     {
@@ -39,28 +67,54 @@ public class menu : MonoBehaviour, IPointerClickHandler
 
     public static bool newGame;
 
-    public void ContinueGame()
+    public void ContinueGame(bool newG)
     {
-        newGame = false;
+        newGame = newG;
         SceneManager.LoadScene("LoadingScreen");
+    }
+
+    void EnableButton()
+    {
+        int a = MenuStatus - 1;
+        for (int i = 0; i < ButtonLayout.Length; i++)
+            ButtonLayout[i].SetActive(i == a);
     }
 
     private void Start()
     {
         instance = this;
+        DefineButtons();
         MenuStatus = 0;
         Menu_Br.gameObject.SetActive(false);
         Debug.Log(Application.persistentDataPath);
+
+    }
+
+    void DefineButtons()
+    {
+        Buttons = new Dictionary<string, Action>();
+        Buttons.Add("newGame", () => ContinueGame(true));
+        Buttons.Add("loadGame", () => ContinueGame(false));
+        Buttons.Add("options", () => ShowMenu(2));
+        Buttons.Add("quit", () => Application.Quit());
+        Buttons.Add("back-options", () => ShowMenu(1));
+        Buttons.Add("sound-settings", () => ShowMenu(3));
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && MenuStatus == 0) 
-        { 
-            MenuStatus = 1;
+        if (Input.GetKeyDown(KeyCode.Space) && MenuStatus == 0)
+        {
+            ShowMenu(1);
             Press_Label.enabled = false;
             Menu_Br.gameObject.SetActive(true);
         }
+    }
+
+    void ShowMenu(int a)
+    {
+        MenuStatus = a;
+        EnableButton();
     }
 
     void OnGUI()
@@ -68,20 +122,6 @@ public class menu : MonoBehaviour, IPointerClickHandler
 
         if (MenuStatus == 1)
         {
-
-            if (GUI.Button(new Rect(100, 100, 100, 100), "New Game"))
-            {
-                newGame = true;
-                SceneManager.LoadScene("LoadingScreen");
-            }
-
-            if (File.Exists(Application.persistentDataPath + "//save.txt"))
-            {
-                if (GUI.Button(new Rect(100, 200, 100, 100), "Continue"))
-                {
-                    ContinueGame();
-                }
-            }
 
             if (File.Exists(Application.persistentDataPath + "//save.txt"))
             {
