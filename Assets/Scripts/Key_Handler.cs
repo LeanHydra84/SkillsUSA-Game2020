@@ -15,6 +15,7 @@ public class Key_Handler : MonoBehaviour
     private SpriteRenderer spr;
 
     private static GameObject player_character;
+    [HideInInspector] public bool isSecond { get; private set; }
 
     void Start()
     {
@@ -35,15 +36,22 @@ public class Key_Handler : MonoBehaviour
         spr.sprite = KeySprites[bossNumber * 2 - 2];
         gameObject.SetActive(false);
     }
-    
+
+    /*private void OnEnable()
+    {
+        recalculateImages(keyNumber);
+    }*/
+
     void recalculateImages(int des)
     {
         
-        if (des == keyNumber)
+        if(PlayerState.Keys[keyNumber - 1] == 1)
         {
+            isSecond = true;
             spr.sprite = KeySprites[bossNumber * 2 - 1];
             update -= recalculateImages;
         }
+
             
     }
 

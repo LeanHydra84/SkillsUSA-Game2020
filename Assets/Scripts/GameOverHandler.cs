@@ -48,6 +48,7 @@ public class GameOverHandler : MonoBehaviour
             switch(CurrentShown)
             {
                 case 2:
+                    LoadSceneHandler.Scene = "Alright";
                     SceneManager.LoadScene("LoadingScreen");
                     break;
                 case 1:

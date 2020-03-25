@@ -12,6 +12,7 @@ using UnityEngine.InputSystem.Switch;
 
 public delegate void DarkAction_Bool(bool x);
 public delegate void DarkAction();
+
 public static class PlayerState
 {
     static IEnumerator healthDelay()
@@ -21,6 +22,8 @@ public static class PlayerState
         canLose = true;
     }
 
+    public const int MaxHealth = 6;
+
     static bool alive;
     static int pianoKeys;
     static int health;
@@ -29,27 +32,34 @@ public static class PlayerState
     static bool canLose;
     static int ammo;
 
-    public static float[] position;
+    public static bool hasMask;
+
+    public static bool[] Victories { get; set; }
+
     public static float x;
     public static float y;
     public static float z;
 
+    public static int[] Bosses { get; set; }
+
+    public static int[] PuzzlePositions { get; set; }
+
     public static void Reset()
     {
-        position = new float[2];
+        hasMask = false;
         Keys = new int[4];
         pianoKeys = 0;
-        health = 4;
+        health = MaxHealth;
         time = 0f;
         seconds = 0;
         canLose = true;
         ammo = 0;
         isInBossFight = false; //SHOULD NOT BE TRUE
         alive = true;
-
+        Victories = new bool[4];
         System.Random rnd = new System.Random();
         Bosses = Enumerable.Range(1, 8).OrderBy(r => rnd.Next()).ToArray();
-
+        PuzzlePositions = Enumerable.Range(0, mapCreator.instance.Rooms.Length - 1).OrderBy(r => rnd.Next()).ToArray();
     }
 
     static PlayerState()
@@ -76,14 +86,14 @@ public static class PlayerState
         }
     }
 
-    public static int[] Bosses { get; set; }
+    
 
     public static int Health
     {
         get => health;
         set
         {
-            if (canLose && (value >= 0 && value < 5))
+            if (canLose && (value >= 0 && value <= MaxHealth))
             {
                 health = value;
                 mainScript.instance.StartCoroutine(healthDelay());
@@ -116,34 +126,45 @@ public static class PlayerState
         transDat trans = (transDat)saveObj;
 
         health = trans.health;
-        PianoKeys = trans.keys;
+        Keys = trans.keys;
         time = trans.time;
         seconds = (int)time;
+        hasMask = trans.hasMask;
 
-        for (int i = 0; i < 3; i++)
-        {
-            position[i] = trans.HoldPosition[i];
-        }
+        x = trans.x;
+        y = trans.y;
+        z = trans.z;
+
+        Bosses = trans.Bosses;
+        PuzzlePositions = trans.PuzzlePositions;
+        Victories = trans.Victories;
     }
 
     public static void Save()
     {
+        
         transDat trans = new transDat
         {
-            keys = PianoKeys,
+            keys = Keys,
             health = health,
-            time = time,
+            time = seconds,
+            Bosses = Bosses,
+            Victories = Victories,
+            PuzzlePositions = PuzzlePositions,
+            hasMask = hasMask,
 
-            //HoldPosition = {mainScript.instance.transform.position.y,  }, Why can't I assign to an array in here
+            x = mainScript.instance.transform.position.x,
             y = mainScript.instance.transform.position.y,
             z = mainScript.instance.transform.position.z
         };
-        trans.HoldPosition[0] = mainScript.instance.transform.position.x; //But here works? 
 
         BinaryFormatter formatter = new BinaryFormatter();
         Stream stream = new FileStream(Application.persistentDataPath + "//save.txt", FileMode.Create, FileAccess.Write);
         formatter.Serialize(stream, trans);
         stream.Close();
+
+        Debug.Log("Saved");
+
     }
 
 }
@@ -168,7 +189,9 @@ public class mainScript : MonoBehaviour
     public Vector3 bossFightPos;
     public static Vector3 startingPos;
     Animator FadeAnimator;
-
+    [SerializeField] private Text timeText;
+    [SerializeField] private Image MaskCheck;
+    [SerializeField] private GameObject PauseScreen;
 
     //Interaction Booleans
     private bool LeftClick;
@@ -181,11 +204,9 @@ public class mainScript : MonoBehaviour
     public float intensityMult = 2f;
 
     //GUI
-    public Texture2D[] heart;
+    public Texture2D healthImage;
     public Texture2D[] ammo_counter;
-    public Texture2D timeImage;
     private bool canPause;
-    public int goo;
     private Image fadeBlack;
 
     //Array of lights for the mask
@@ -198,6 +219,7 @@ public class mainScript : MonoBehaviour
     GUIStyle style;
 
     public static GameObject[] handler_bosses;
+
 
     private void GetAllMapObjects()
     {
@@ -226,6 +248,16 @@ public class mainScript : MonoBehaviour
         flashDirection = new Vector3(temp.x, 0, temp.y).normalized;
     }
 
+    void StaticReset_Master()
+    {
+        Minigame_puzzle.StaticReset();
+        Key_Handler.update = null;
+    }
+
+    private void OnLevelWasLoaded(int level)
+    {
+        StaticReset_Master();
+    }
 
     private void Awake()
     {
@@ -245,14 +277,18 @@ public class mainScript : MonoBehaviour
         if (!menu.newGame)
         {
             PlayerState.Load();
-            transform.position = new Vector3(PlayerState.x, PlayerState.y + 1, PlayerState.z);
+            transform.position = new Vector3(PlayerState.x, PlayerState.y + 2, PlayerState.z);
+            Key_Handler.update(0);
         }
+
+        
+
     }
 
     public void FinishedBoss()
     {
         StartCoroutine(fadeTeleport(startingPos));
-        PlayerState.Health = 4;
+        PlayerState.Health = PlayerState.MaxHealth;
     }
 
     public IEnumerator fadeTeleport(Vector3 tele)
@@ -282,8 +318,7 @@ public class mainScript : MonoBehaviour
     {
         directionalLight = GameObject.Find("D1");
         dg = gameObject.AddComponent<DialogScript>();
-        fadeBlack = charCont.mainCam.transform.GetChild(0).GetChild(0).GetComponent<Image>();
-        fadeBlack.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
+        fadeBlack = charCont.mainCam.transform.GetChild(0).Find("FadeBlack").GetComponent<Image>();
         fadeBlack.GetComponent<Animator>().Play("ScreenFadeIn");
         bossFight.instance = GameObject.Find("Boss").GetComponent<bossFight>();
         Debug.Log($"{Screen.width} x {Screen.height}, at {Screen.dpi} dpi");
@@ -307,6 +342,7 @@ public class mainScript : MonoBehaviour
         maskOn = false;
         CR_mask = true;
         MaskHolder(true);
+        MaskCheck.gameObject.SetActive(false);
         style = new GUIStyle();
         style.normal.textColor = Color.black;
         style.fontSize = (int)((100f / 1617f) * Screen.height / Screen.dpi * 72);
@@ -318,10 +354,10 @@ public class mainScript : MonoBehaviour
 
         //Dictionary Rects:
         rectPositions.Clear();
-        rectPositions.Add("Heart", new Rect(0, 0, Screen.width / 9.16f, Screen.width / 9.16f));
-        rectPositions.Add("Ammo", new Rect(Screen.width / 128.26f, Screen.height - (Screen.height / 3.79f), Screen.width / 8.75f, Screen.width / 8.75f));
-        rectPositions.Add("Time", new Rect(Screen.width - (Screen.width / 6.41f) + 15f, -(Screen.height / 18.22f), Screen.width / 6.41f, Screen.height / 3.04f));
-        rectPositions.Add("TimeText", new Rect(Screen.width / 1.08f, Screen.height / 10.65f, Screen.width / 3.9f, Screen.height / 5.37f));
+        rectPositions.Add("Ammo", new Rect(Screen.width / 96.2f, Screen.height / 1.34f, Screen.width / 4.81f, Screen.height / 3.96f));
+        rectPositions.Add("HeartPosition", new Rect(Screen.width - Screen.width/12, Screen.height - Screen.width/12, Screen.width/10, Screen.width/10));
+
+        mapCreator.instance.Initialize();
 
     }
 
@@ -341,7 +377,7 @@ public class mainScript : MonoBehaviour
         }
     }
 
-    public static IEnumerator EnableRoom(GameObject[] correct)
+    public static IEnumerator EnableRoom(GameObject[] correct, GameObject puzzle)
     {
 
         List<GameObject> RemoveList = AllRooms.ToList();
@@ -355,19 +391,31 @@ public class mainScript : MonoBehaviour
 
         foreach (GameObject j in correct)
         {
-            try { j.SetActive(true); }
-            catch (MissingReferenceException) { Debug.Log("Failed to create object"); }
+            /*try { j.SetActive(true); }
+            catch (MissingReferenceException) { Debug.Log("Failed to create object"); }*/
+            if (j != null) j.SetActive(true);
             RemoveList.Remove(j);
         }
 
+        if(puzzle != null)
+        {
+            puzzle.SetActive(true);
+            RemoveList.Remove(puzzle);
+        }
 
         yield return new WaitForSeconds(1.0f);
 
         foreach (GameObject k in RemoveList)
         {
-            try { k.SetActive(false); }
-            catch (MissingReferenceException) { Debug.Log($"Caught {k}"); }
+
+            if(k != null)
+            {
+                k.SetActive(false);
+            }
+            /*try { k.SetActive(false); }
+            catch (MissingReferenceException) { Debug.Log($"Caught {k}"); }*/
         }
+
 
     }
 
@@ -398,10 +446,17 @@ public class mainScript : MonoBehaviour
         FadeAnimator.Play("ScreenFadeIn");
     }
 
+    void MaskAlpha(bool a)
+    {
+        Color Tc = MaskCheck.color;
+        Tc.a = a ? 0.05f : 1;
+        MaskCheck.color = Tc;
+    }
+
     void MaskHolder(bool a)
     {
         CR_mask = false;
-
+        MaskAlpha(a);
         if (a) charCont.mainCam.cullingMask &= ~(1 << LayerMask.NameToLayer("ghosts")); //Enables culling mask for ghosts
         else charCont.mainCam.cullingMask |= 1 << LayerMask.NameToLayer("ghosts"); //Enables culling mask for the ghosts
 
@@ -416,23 +471,29 @@ public class mainScript : MonoBehaviour
         CR_mask = true;
     }
 
-    void mask(bool a) { StartCoroutine(FadeInAndOut(1.4f, MaskHolder, a)); }
-
+    void mask(bool a) { if(PlayerState.hasMask) StartCoroutine(FadeInAndOut(1.4f, MaskHolder, a)); }
 
     void OnGUI()
     {
+
         //Draw Health
-        GUI.DrawTexture(rectPositions["Heart"], heart[PlayerState.Health], ScaleMode.ScaleToFit, true);
+        if(!charCont.isInPuzzle && !charCont.isInDialog)
+        {
+            Rect heartPosition;
+            for (int i = 0; i < PlayerState.Health; i++)
+            {
+                heartPosition = rectPositions["HeartPosition"];
+                heartPosition.x -= i * (Screen.width / 18);
+                GUI.DrawTexture(heartPosition, healthImage, ScaleMode.ScaleToFit, true);
+            }
+        }
+        
+        if(PlayerState.IsInBossFight)
+        {
+            GUI.DrawTexture(rectPositions["Ammo"], ammo_counter[PlayerState.Ammo], ScaleMode.ScaleToFit, true);
+        }
 
-        //Draw Ammo
-        GUI.DrawTexture(rectPositions["Ammo"], ammo_counter[PlayerState.Ammo], ScaleMode.ScaleToFit, true);
-
-        //Draw Time
-        GUI.DrawTexture(rectPositions["Time"], timeImage, ScaleMode.ScaleToFit, true);
-
-        GUI.Label(rectPositions["TimeText"], convertTime(PlayerState.Seconds), style);
         //Flashlight
-
         if (flashDirection == Vector3.zero)
         {
             Event current = Event.current;
@@ -492,10 +553,21 @@ public class mainScript : MonoBehaviour
 
     }
 
-    void TryOpenDoors(Collider[] cols)
+    void TryInteract(Collider[] cols)
     {
         foreach (Collider hit in cols)
         {
+            if(hit.tag == "item" && !charCont.isInPuzzle)
+            {
+                if(hit.name == "Mask")
+                {
+                    PlayerState.hasMask = true;
+                    MaskCheck.gameObject.SetActive(true);
+                    Destroy(hit.gameObject);
+                }
+                return;
+            }
+
             if (hit.tag == "Puzzle" && !charCont.isInPuzzle)
             {
                 hit.gameObject.AddComponent<Minigame_puzzle>();
@@ -504,16 +576,16 @@ public class mainScript : MonoBehaviour
                 return;
             }
 
-            if (hit.tag == "ghostDiag" && !charCont.isInDialog && maskOn)
+            if (hit.tag == "ghostDiag" && !charCont.isInDialog && !charCont.isInPuzzle && maskOn)
             {
 
                 GhostDialogHandler g = hit.gameObject.GetComponent<GhostDialogHandler>();
-                dg.Initialize(g.name, g.lines, "");
+                dg.Initialize(g.ghostName, g.lines, "");
                 g.LineNumber++;
                 return;
             }
 
-            if (hit.tag == "bossHandler" && !charCont.isInDialog && maskOn)
+            if (hit.tag == "bossHandler" && !charCont.isInDialog && !charCont.isInPuzzle && maskOn)
             {
                 hit.gameObject.GetComponent<BossHandler>().Interact();
                 return;
@@ -544,6 +616,8 @@ public class mainScript : MonoBehaviour
         PlayerState.Time = PlayerState.Time + Time.deltaTime;
         //if (time != null) time.text = convertTime(PlayerState.Seconds);
 
+        if (timeText != null) timeText.text = convertTime(PlayerState.Seconds);
+
         //Lose-Death condition
         if (PlayerState.Health <= 0)
         {
@@ -555,6 +629,11 @@ public class mainScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             PlayerState.Health--;
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            PlayerState.Health++;
         }
 
         if (Input.GetKeyDown(KeyCode.K)) dg.Initialize("GLADOS", "I think we can put our differences behind us:=For science.:=You monster.:=Please place the Weighted Storage Cube on the Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button", "");
@@ -596,25 +675,41 @@ public class mainScript : MonoBehaviour
             }
         }
         LeftClick = false;
-        if (Input.GetKeyDown(KeyCode.M) && CR_mask)
+        if (Input.GetKeyDown(KeyCode.Q) && CR_mask)
             mask(maskOn);
-        /*
+        
         if (Input.GetKeyDown(KeyCode.Escape))
 		{
-			PlayerState.Save();
-           		Application.Quit();
+            PauseMenu();
 		}
-        */
+        
 
         if (Input.GetKeyDown(KeyCode.E)) Interact = true;
         if (Interact)
         {
             //RaycastHit[] hits = Physics.CapsuleCastAll();
             Collider[] hits = Physics.OverlapSphere(transform.position, 2f);
-            TryOpenDoors(hits);
+            TryInteract(hits);
         }
         Interact = false;
     }
+    public static bool isInPauseMenu;
 
+    IEnumerator timeScaler(bool a)
+    {
+        yield return new WaitForSeconds(0.5f);
+        Time.timeScale = a ? 1 : 0;
+    }
 
+    private void PauseMenu()
+    {
+        isInPauseMenu = !isInPauseMenu;
+
+        if (isInPauseMenu) StartCoroutine(timeScaler(false));
+        else Time.timeScale = 1;
+
+        FadeAnimator.Play(isInPauseMenu ? "StartPause" : "EndPause");
+        PauseScreen.SetActive(isInPauseMenu);
+
+    }
 }

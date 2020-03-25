@@ -7,20 +7,20 @@ using UnityEngine.SceneManagement;
 
 public class LoadSceneHandler : MonoBehaviour
 {
+    public static string Scene { get; set; }
+    [SerializeField] private Slider slider;
 
-    [SerializeField]
-    private Slider slider;
-
-    void Start()
+    private void Start()
     {
         StartCoroutine(AsyncSceneLoad());
     }
 
     IEnumerator AsyncSceneLoad()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.5f);
         PlayerState.Reset();
-        AsyncOperation sceneLoader = SceneManager.LoadSceneAsync("Alright");
+        Debug.Log(Scene);
+        AsyncOperation sceneLoader = SceneManager.LoadSceneAsync(Scene);
         Debug.Log("Created Async Operation");
         while(sceneLoader.progress < 1)
         {
@@ -28,6 +28,7 @@ public class LoadSceneHandler : MonoBehaviour
             slider.value = sceneLoader.progress;
             yield return new WaitForEndOfFrame();
         }
+
 
     }
 

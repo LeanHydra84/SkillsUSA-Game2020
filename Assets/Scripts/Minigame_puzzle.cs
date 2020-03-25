@@ -73,17 +73,17 @@ class DDRPosition
 public class Minigame_puzzle : MonoBehaviour
 {
     public static float CheckPoint = Screen.width / 3;
-    public int PuzzleType = 1;
+    public int PuzzleType;
     int Guys_Index;
     int missed;
     List<DDRPosition> ddr = new List<DDRPosition>();
     Coroutine DanceMovement;
-    
+   
     public string hashString;
     public string checkString;
     public int length;
     public int counter;
-
+    private int read_index;
     private int[] addCurrent;
 
     bool canAdd;
@@ -94,15 +94,18 @@ public class Minigame_puzzle : MonoBehaviour
     private static Animator[] TheBoys;
     private AudioSource aud;
 
-    private void OnLevelWasLoaded(int level)
+    public static void StaticReset()
     {
-        
+        clips = null;
     }
 
     void SetAll(int a) { for (int i = 0; i < 4; i++) { addCurrent[i] = a; } }
 
     void Start()
     {
+
+        if (GetComponent<Key_Handler>().isSecond) PuzzleType = 0;
+        else PuzzleType = 1;
 
         mainScript.controls.Controller.MG_Up.started += ctx => addString(4);
         mainScript.controls.Controller.MG_Down.started += ctx => addString(2);
@@ -134,7 +137,7 @@ public class Minigame_puzzle : MonoBehaviour
             TheBoys = new Animator[4];
             int j = 0;
             Transform temporary = charCont.mainCam.transform.GetChild(0);
-            for (int i = 2; i < 6; i++)
+            for (int i = 1; i < 5; i++)
             {
                 TheBoys[j++] = temporary.GetChild(i).GetComponent<Animator>();
             }
@@ -147,7 +150,7 @@ public class Minigame_puzzle : MonoBehaviour
             SetAll(0);
 
             //Randomization goes here
-            StartCoroutine(EndAttempt(0.2f));
+            DanceMovement = StartCoroutine(SimonLoop(0.2f));
             aud = GetComponent<AudioSource>();
 
 
@@ -220,7 +223,7 @@ public class Minigame_puzzle : MonoBehaviour
 
     }
 
-    IEnumerator EndAttempt(float time)
+    IEnumerator SimonLoop(float time)
     {
         counter = 0;
         checkString = "";
@@ -234,16 +237,20 @@ public class Minigame_puzzle : MonoBehaviour
             SetAll(4);
             yield return new WaitForSeconds(0.1f);
         }
-        for (int i = 0; i < hashString.Length; i++)
+        for (read_index = 0; read_index < hashString.Length; read_index++)
         {
             if (Input.GetKey(KeyCode.Return)) break;
-            int index = int.Parse(hashString[i].ToString()) - 1;
+            int index = int.Parse(hashString[read_index].ToString()) - 1;
             addCurrent[index] = 0;
             aud.clip = clips[index];
             aud.Play();
             yield return new WaitForSeconds(aud.clip.length);
             addCurrent[index] = 4;
-            yield return new WaitForSeconds(time);
+            canAdd = true;
+            presses = 0;
+            yield return new WaitUntil(ButtonPressed);
+            yield return new WaitForSeconds(aud.clip.length + 0.4f);
+            canAdd = false;
         }
 
         canAdd = true;
@@ -256,13 +263,21 @@ public class Minigame_puzzle : MonoBehaviour
         addCurrent[select - 1] = 4;
 
     }
-
+    int presses;
     void addString(int add)
     {
         aud.clip = clips[add - 1];
         aud.Play();
         checkString += add;
         counter++;
+        presses++;
+        CheckTheString();
+        if (presses == read_index + 1)
+        {
+            counter = 0;
+            checkString = "";
+            HasButtonBeenPressed = true;
+        }
         StartCoroutine(makeGlow(add));
     }
 
@@ -364,6 +379,35 @@ public class Minigame_puzzle : MonoBehaviour
         else return true;
     }
 
+    bool HasButtonBeenPressed;
+    public bool ButtonPressed()
+    {
+        if (HasButtonBeenPressed)
+        {
+            HasButtonBeenPressed = false;
+            return true;
+        }
+        else return false;
+        
+    }
+
+    void CheckTheString()
+    {
+        if (counter == length || doesConnect(counter - 1))
+        {
+            if (checkString == hashString)
+                StartCoroutine(GameWin());
+            else
+            {
+                StopCoroutine(DanceMovement);
+                DanceMovement = StartCoroutine(SimonLoop(0.2f));
+                aud.clip = clips[4];
+                aud.Play();
+            }
+
+
+        }
+    }
 
     private void FixedUpdate()
     {
@@ -400,19 +444,7 @@ public class Minigame_puzzle : MonoBehaviour
         // Right Arrow = Up
 
 
-        if (counter == length || doesConnect(counter - 1))
-        {
-            if (checkString == hashString)
-                StartCoroutine(GameWin());
-            else
-            {
-                StartCoroutine(EndAttempt(0.2f));
-                aud.clip = clips[4];
-                aud.Play();
-            }
-
-
-        }
+       
 
 
 

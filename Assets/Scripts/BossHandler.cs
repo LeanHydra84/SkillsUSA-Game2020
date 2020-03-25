@@ -49,7 +49,7 @@ public class BossHandler : MonoBehaviour
         Lines[0] = "I hear you are the worst musician to set foot in this house.:=Why are you even here?:=You will only embarrass yourself trying to outplay a master like myself.:=Still, I'll humor you";
         Lines[1] = "You must be the new guest here.:=I don’t see why anyone would come to this place by choice.:=Nothing good has happened in this house since the day it was built.:=I must give it some credit,  however.:=It houses some of the greatest musicians to ever walk this earth.:=Why don’t you join us?";
         Lines[2] = "Hmm...:=Was that your uncle who was crushed by the piano?:=He is not a good man.:=Whatever he put you up to can be nothing but trouble.:=I don’t want to hurt a child, but stopping a man like your uncle...:=Now that might just change my mind.";
-        Lines[3] = "Your foolish uncle tried to stop us, but that old coward can’t imagine the pain he caused.:=Come hither young one, for it is time to pay for your uncle’s crime.";
+        Lines[3] = "Your foolish uncle tried to stop us, but that old coward can’t imagine the pain he caused.:=Come hither young one:=It is time to pay for your uncle’s crime.";
         Lines[4] = "Oh, is that my flute?:=Thank you child, this is a kind thing you have done.:=Why don’t I play you a song to show my gratitude.:=Be warned, this tune is a tad… energetic.";
         Lines[5] = "You must be lost my sweet child.:=Do not worry, for I shall protect you from the evils that haunt this house.:=Come, and I will play you a lullaby.";
         Lines[6] = "Ah Ha! Another brass brother!:=Welcome, do you wish to battle?:=Although you are young, I make no promises for your safety!";
@@ -71,6 +71,7 @@ public class BossHandler : MonoBehaviour
 
     public void Interact()
     {
+        bossFight.BossCorner = BossNumber;
         mainScript.dg.Initialize(myName, Lines[BossIndex], myName);
     }
 

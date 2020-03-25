@@ -60,6 +60,8 @@ public class bossFight : MonoBehaviour
     public static bossFight instance;
     private int bossHealth;
 
+    public static int BossCorner;
+
     public static string fightName { get; set; }
 
     public GameObject[] nameNumber;
@@ -241,6 +243,7 @@ public class bossFight : MonoBehaviour
         Debug.Log("Death method called");
         isPlaying = false;
         music_player.Stop();
+        PlayerState.Victories[BossCorner - 1] = true;
         mainScript.instance.DisableBossFigure(fightName);
         StartCoroutine(deathFade());
     }

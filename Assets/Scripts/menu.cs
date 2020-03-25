@@ -34,14 +34,18 @@ public static class Settings
 public class transDat
 {
     //A LOT MORE WILL HAVE TO BE ADDED TO THIS AAAAAAAAAAA
-    public int keys;
+    public int[] keys;
     public int health;
     public float time;
 
-    public float[] HoldPosition = new float[2];
     public float x;
     public float y;
     public float z;
+
+    public int[] Bosses;
+    public int[] PuzzlePositions;
+    public bool[] Victories;
+    public bool hasMask;
 }
 
 public class menu : MonoBehaviour, IPointerClickHandler
@@ -70,6 +74,7 @@ public class menu : MonoBehaviour, IPointerClickHandler
     public void ContinueGame(bool newG)
     {
         newGame = newG;
+        LoadSceneHandler.Scene = "Alright";
         SceneManager.LoadScene("LoadingScreen");
     }
 

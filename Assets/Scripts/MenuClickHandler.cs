@@ -6,10 +6,6 @@ using UnityEngine.EventSystems;
 using System.IO;
 using System;
 
-static class ClickActions
-{
-
-}
 
 public class MenuClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {

@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class roomClass : MonoBehaviour
 {
-    
-    
+    public bool randomRoom;
+    private void Awake()
+    {
+        if(randomRoom)
+            PuzzlePosition = transform.GetChild(1).position;
+    }
 
     public bool isHallway;
     public string roomName = "";
@@ -14,9 +18,12 @@ public class roomClass : MonoBehaviour
 
     public int Boss_State;
 
-
     public GameObject[] assets;
-    
+
+    public Vector3 PuzzlePosition { get; private set; }
+
+    public GameObject Puzzle { get; set; }
+
     public MeshRenderer[] GetRenderers()
     {
         MeshRenderer[] R = new MeshRenderer[assets.Length];

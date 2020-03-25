@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class charCont : MonoBehaviour
 {
@@ -157,7 +156,7 @@ public class charCont : MonoBehaviour
             roomCamPosition = rc.roomCam.transform;
             EndLerpCoroutines();
             CurrentCoroutines.Add(StartCoroutine(lerpCamera(roomCamPosition, rc.isHallway)));
-            CurrentCoroutines.Add(StartCoroutine(mainScript.EnableRoom(rc.assets)));
+            CurrentCoroutines.Add(StartCoroutine(mainScript.EnableRoom(rc.assets, rc.Puzzle)));
 
             c1 = other;
         }
@@ -185,7 +184,7 @@ public class charCont : MonoBehaviour
             GUI.skin.textArea.hover.background =
             GUI.skin.textArea.onFocused.background =
             GUI.skin.textArea.focused.background = null;
-            GUI.TextArea(new Rect(10, 50, 400, 400), editString);
+            GUI.TextArea(new Rect(10, 500, 400, 400), editString);
         }
     }
 
