@@ -74,8 +74,8 @@ public class menu : MonoBehaviour, IPointerClickHandler
     public void ContinueGame(bool newG)
     {
         newGame = newG;
-        LoadSceneHandler.Scene = "Alright";
-        SceneManager.LoadScene("LoadingScreen");
+        LoadSceneHandler.Scene = 2;
+        SceneManager.LoadScene(1);
     }
 
     void EnableButton()
@@ -87,6 +87,7 @@ public class menu : MonoBehaviour, IPointerClickHandler
 
     private void Start()
     {
+        print($"{Screen.width} x {Screen.height}");
         instance = this;
         DefineButtons();
         MenuStatus = 0;

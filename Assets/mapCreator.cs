@@ -8,7 +8,7 @@ public class mapCreator : MonoBehaviour
 
     [SerializeField] private Transform[] Audios;
     [SerializeField] private Transform[] Puzzles;
-    [SerializeField] public roomClass[] Rooms;
+    public roomClass[] Rooms;
 
     void Awake()
     {

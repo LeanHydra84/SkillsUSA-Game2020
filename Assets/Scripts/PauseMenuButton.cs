@@ -31,17 +31,12 @@ public class PauseMenuButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         myText.color = based;
     }
 
-
-
-
-    // Start is called before the first frame update
     void Start()
     {
         myText = GetComponent<Text>();
         based = myText.color;
     }
 
-    //Possible Methods
 
     public void QuitGame()
     {
@@ -51,8 +46,8 @@ public class PauseMenuButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public void BackToMenu()
     {
         Time.timeScale = 1;
-        LoadSceneHandler.Scene = "Menu";
-        SceneManager.LoadScene("LoadingScreen");
+        LoadSceneHandler.Scene = 0;
+        SceneManager.LoadScene(1);
     }
 
     public void SaveGame()

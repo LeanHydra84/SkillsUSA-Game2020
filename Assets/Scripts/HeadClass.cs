@@ -34,7 +34,7 @@ public class HeadClass : MonoBehaviour
             case "cello":
                 return Cello[i];
             case "clarinet":
-                return Accordion[i];
+                return Clarinet[i];
             case "flute":
                 return Flute[i];
             case "harp":

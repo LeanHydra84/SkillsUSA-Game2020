@@ -48,8 +48,8 @@ public class GameOverHandler : MonoBehaviour
             switch(CurrentShown)
             {
                 case 2:
-                    LoadSceneHandler.Scene = "Alright";
-                    SceneManager.LoadScene("LoadingScreen");
+                    LoadSceneHandler.Scene = 2;
+                    SceneManager.LoadScene(1);
                     break;
                 case 1:
                     Application.Quit();

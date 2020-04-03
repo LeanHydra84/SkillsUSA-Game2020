@@ -8,7 +8,6 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Switch;
 
 public delegate void DarkAction_Bool(bool x);
 public delegate void DarkAction();
@@ -23,7 +22,7 @@ public static class PlayerState
     }
 
     public const int MaxHealth = 6;
-
+    
     static bool alive;
     static int pianoKeys;
     static int health;
@@ -59,7 +58,7 @@ public static class PlayerState
         Victories = new bool[4];
         System.Random rnd = new System.Random();
         Bosses = Enumerable.Range(1, 8).OrderBy(r => rnd.Next()).ToArray();
-        PuzzlePositions = Enumerable.Range(0, mapCreator.instance.Rooms.Length - 1).OrderBy(r => rnd.Next()).ToArray();
+        
     }
 
     static PlayerState()
@@ -79,14 +78,18 @@ public static class PlayerState
     public static bool IsInBossFight
     {
         get => isInBossFight;
+
         set
         {
+            int cursorTrype = Convert.ToInt32(!isInBossFight);
+            Texture2D image = mainScript.instance.Cursors[cursorTrype];
+            Cursor.SetCursor(image, new Vector2(image.width / 2, image.height / 2), CursorMode.ForceSoftware);
+
             isInBossFight = value;
             mainScript.aud.enabled = !isInBossFight;
         }
     }
 
-    
 
     public static int Health
     {
@@ -142,7 +145,7 @@ public static class PlayerState
 
     public static void Save()
     {
-        
+
         transDat trans = new transDat
         {
             keys = Keys,
@@ -172,7 +175,7 @@ public static class PlayerState
 
 public class mainScript : MonoBehaviour
 {
-
+    
     public static PlayerControls controls;
     public static AudioSource aud;
 
@@ -192,6 +195,9 @@ public class mainScript : MonoBehaviour
     [SerializeField] private Text timeText;
     [SerializeField] private Image MaskCheck;
     [SerializeField] private GameObject PauseScreen;
+    
+
+    public Texture2D[] Cursors;
 
     //Interaction Booleans
     private bool LeftClick;
@@ -281,7 +287,7 @@ public class mainScript : MonoBehaviour
             Key_Handler.update(0);
         }
 
-        
+
 
     }
 
@@ -314,12 +320,15 @@ public class mainScript : MonoBehaviour
         Debug.Log("Start Battle");
     }
 
+
     void Start()
     {
         directionalLight = GameObject.Find("D1");
         dg = gameObject.AddComponent<DialogScript>();
         fadeBlack = charCont.mainCam.transform.GetChild(0).Find("FadeBlack").GetComponent<Image>();
         fadeBlack.GetComponent<Animator>().Play("ScreenFadeIn");
+        System.Random rnd = new System.Random();
+        PlayerState.PuzzlePositions = Enumerable.Range(0, mapCreator.instance.Rooms.Length - 1).OrderBy(r => rnd.Next()).ToArray();
         bossFight.instance = GameObject.Find("Boss").GetComponent<bossFight>();
         Debug.Log($"{Screen.width} x {Screen.height}, at {Screen.dpi} dpi");
         GameObject[] gos = GameObject.FindGameObjectsWithTag("room_lights");
@@ -355,7 +364,9 @@ public class mainScript : MonoBehaviour
         //Dictionary Rects:
         rectPositions.Clear();
         rectPositions.Add("Ammo", new Rect(Screen.width / 96.2f, Screen.height / 1.34f, Screen.width / 4.81f, Screen.height / 3.96f));
-        rectPositions.Add("HeartPosition", new Rect(Screen.width - Screen.width/12, Screen.height - Screen.width/12, Screen.width/10, Screen.width/10));
+        rectPositions.Add("HeartPosition", new Rect(Screen.width - Screen.width / 12, Screen.height - Screen.width / 12, Screen.width / 10, Screen.width / 10));
+
+        Cursor.SetCursor(Cursors[0], Vector2.zero, CursorMode.ForceSoftware);
 
         mapCreator.instance.Initialize();
 
@@ -397,7 +408,7 @@ public class mainScript : MonoBehaviour
             RemoveList.Remove(j);
         }
 
-        if(puzzle != null)
+        if (puzzle != null)
         {
             puzzle.SetActive(true);
             RemoveList.Remove(puzzle);
@@ -408,7 +419,7 @@ public class mainScript : MonoBehaviour
         foreach (GameObject k in RemoveList)
         {
 
-            if(k != null)
+            if (k != null)
             {
                 k.SetActive(false);
             }
@@ -419,7 +430,7 @@ public class mainScript : MonoBehaviour
 
     }
 
-    
+
 
     public IEnumerator FadeInAndOut(float time, DarkAction_Bool meAction, bool a)
     {
@@ -471,13 +482,13 @@ public class mainScript : MonoBehaviour
         CR_mask = true;
     }
 
-    void mask(bool a) { if(PlayerState.hasMask) StartCoroutine(FadeInAndOut(1.4f, MaskHolder, a)); }
+    void mask(bool a) { if (PlayerState.hasMask) StartCoroutine(FadeInAndOut(1.4f, MaskHolder, a)); }
 
     void OnGUI()
     {
 
         //Draw Health
-        if(!charCont.isInPuzzle && !charCont.isInDialog)
+        if (!charCont.isInPuzzle && !charCont.isInDialog)
         {
             Rect heartPosition;
             for (int i = 0; i < PlayerState.Health; i++)
@@ -487,8 +498,8 @@ public class mainScript : MonoBehaviour
                 GUI.DrawTexture(heartPosition, healthImage, ScaleMode.ScaleToFit, true);
             }
         }
-        
-        if(PlayerState.IsInBossFight)
+
+        if (PlayerState.IsInBossFight)
         {
             GUI.DrawTexture(rectPositions["Ammo"], ammo_counter[PlayerState.Ammo], ScaleMode.ScaleToFit, true);
         }
@@ -509,13 +520,6 @@ public class mainScript : MonoBehaviour
         else
         {
             flashlight.transform.rotation = Quaternion.LookRotation(flashDirection);
-        }
-
-
-        //MAIN MENU
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
         }
 
     }
@@ -557,9 +561,9 @@ public class mainScript : MonoBehaviour
     {
         foreach (Collider hit in cols)
         {
-            if(hit.tag == "item" && !charCont.isInPuzzle)
+            if (hit.tag == "item" && !charCont.isInPuzzle)
             {
-                if(hit.name == "Mask")
+                if (hit.name == "Mask")
                 {
                     PlayerState.hasMask = true;
                     MaskCheck.gameObject.SetActive(true);
@@ -636,6 +640,7 @@ public class mainScript : MonoBehaviour
             PlayerState.Health++;
         }
 
+
         if (Input.GetKeyDown(KeyCode.K)) dg.Initialize("GLADOS", "I think we can put our differences behind us:=For science.:=You monster.:=Please place the Weighted Storage Cube on the Fifteen Hundred Megawatt Aperture Science Heavy Duty Super-Colliding Super Button", "");
 
         if (Input.GetKeyDown(KeyCode.V))
@@ -677,12 +682,12 @@ public class mainScript : MonoBehaviour
         LeftClick = false;
         if (Input.GetKeyDown(KeyCode.Q) && CR_mask)
             mask(maskOn);
-        
+
         if (Input.GetKeyDown(KeyCode.Escape))
-		{
+        {
             PauseMenu();
-		}
-        
+        }
+
 
         if (Input.GetKeyDown(KeyCode.E)) Interact = true;
         if (Interact)
@@ -698,7 +703,7 @@ public class mainScript : MonoBehaviour
     IEnumerator timeScaler(bool a)
     {
         yield return new WaitForSeconds(0.5f);
-        Time.timeScale = a ? 1 : 0;
+        Time.timeScale = 1;//a ? 1 : 0;
     }
 
     private void PauseMenu()

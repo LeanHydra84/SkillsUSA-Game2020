@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class LoadSceneHandler : MonoBehaviour
 {
-    public static string Scene { get; set; }
+    public static int Scene { get; set; }
     [SerializeField] private Slider slider;
 
     private void Start()
