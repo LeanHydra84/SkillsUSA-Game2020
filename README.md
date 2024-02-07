@@ -1,2 +1,5 @@
 # SkillsUSA-Game2020
-Anything super important will be in here I guess.
+
+The game design submission from McCallum High School for the 2020 SkillsUSA competition.
+
+This was the winning submission.
